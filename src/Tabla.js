@@ -23,14 +23,7 @@ const CurrencyTypeProvider = props => (
   />
 );
 
-const summaryCalculator = (type, rows, getValue) => {
-  if (type === 'profit') {
-    let total = IntegratedSummary.defaultCalculator('sum', rows, getValue);
-    let profitPercentage = total >= 2200 ? 30 : (total >= 1800) ? 20 : 0;
-    return `${total * profitPercentage / 100} (${profitPercentage})`;
-  }
-  return IntegratedSummary.defaultCalculator(type, rows, getValue);
-};
+
 const messages = {
   profit: 'Ganancia',
 };
@@ -63,8 +56,17 @@ export default class Tabla extends React.PureComponent {
     };
 
     this.commitChanges = this.commitChanges.bind(this);
+    this.summaryCalculator = this.summaryCalculator.bind(this);
   }
-
+ summaryCalculator(type, rows, getValue) {
+    if (type === 'profit') {
+      const {min20Percent, min30Percent} = this.props;
+      let total = IntegratedSummary.defaultCalculator('sum', rows, getValue);
+      let profitPercentage = total >= min30Percent ? 30 : (total >= min20Percent) ? 20 : 0;
+      return `${total * profitPercentage / 100} (${profitPercentage})`;
+    }
+    return IntegratedSummary.defaultCalculator(type, rows, getValue);
+  };
   commitChanges({ added, changed, deleted }) {
     let { rows } = this.state;
     if (added) {
@@ -107,7 +109,7 @@ export default class Tabla extends React.PureComponent {
             totalItems={totalSummaryItems}
           />
           <IntegratedSummary
-            calculator={summaryCalculator}
+            calculator={this.summaryCalculator}
           />
 
           <Table/>

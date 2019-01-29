@@ -1,8 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Tabla from './Tabla';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import App from './App';
 
 ReactDOM.render(
-	<Tabla />,
+	<React.Fragment>
+    <CssBaseline />
+		<App title="Justool"/>
+  </React.Fragment>
+	,
 	document.getElementById('root')
   );
