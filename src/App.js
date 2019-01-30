@@ -47,7 +47,7 @@ const styles = theme => ({
 });
 
 const drawerConfig = [
-  {name: 'min20Percent', type: 'textfield', label: 'Min 20%'},
+  {name: 'min25Percent', type: 'textfield', label: 'Min 25%'},
   {name: 'min30Percent', type: 'textfield', label: 'Min 30%'},
   {name: 'minAnfitriona', type: 'textfield', label: 'Min anfitriona'}
 ]
@@ -115,7 +115,7 @@ class App extends React.Component {
         </nav>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-			<Tabla min20Percent={this.state.min20Percent} min30Percent={this.state.min30Percent}/>
+			    <Tabla min25Percent={this.state.min25Percent} min30Percent={this.state.min30Percent}/>
         </main>
       </div>
     );

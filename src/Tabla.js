@@ -35,7 +35,7 @@ export default class Tabla extends React.PureComponent {
       columns: [
         { name: 'name', title: 'Nombre del producto' },
         { name: 'pricePerUnit', title: 'Precio por unidad' },
-        { name: 'qty', title: 'Cantidad' },
+        { name: 'qty', title: 'Cantidad', type: Number },
         { name: 'subtotal', title: 'Sub total', getCellValue: row => {
           return row.pricePerUnit && row.qty ? Number(row.pricePerUnit) * Number(row.qty) : '0'
         }}
@@ -46,7 +46,10 @@ export default class Tabla extends React.PureComponent {
       ],
       currencyColumns: ['subtotal'],
       tableColumnExtensions: [
-        { columnName: 'pricePerUnit', align: 'right' },
+        { columnName: 'name', wordWrapEnabled: true },
+      ],
+      editingStateColumnExtensions: [
+        { columnName: 'subtotal', editingEnabled: false },
       ],
       totalSummaryItems: [
         { columnName: 'name', type: 'count' },
@@ -60,9 +63,9 @@ export default class Tabla extends React.PureComponent {
   }
  summaryCalculator(type, rows, getValue) {
     if (type === 'profit') {
-      const {min20Percent, min30Percent} = this.props;
+      const {min25Percent, min30Percent} = this.props;
       let total = IntegratedSummary.defaultCalculator('sum', rows, getValue);
-      let profitPercentage = total >= min30Percent ? 30 : (total >= min20Percent) ? 20 : 0;
+      let profitPercentage = total >= min30Percent ? 30 : (total >= min25Percent) ? 25 : 0;
       return `${total * profitPercentage / 100} (${profitPercentage})`;
     }
     return IntegratedSummary.defaultCalculator(type, rows, getValue);
@@ -112,7 +115,7 @@ export default class Tabla extends React.PureComponent {
             calculator={this.summaryCalculator}
           />
 
-          <Table/>
+          <Table columnExtensions={this.state.tableColumnExtensions}/>
 
           <TableHeaderRow />
           <TableSummaryRow
@@ -120,6 +123,7 @@ export default class Tabla extends React.PureComponent {
           />
           <EditingState
             onCommitChanges={this.commitChanges}
+            columnExtensions={this.state.editingStateColumnExtensions}
           />
           <TableEditRow />
           <TableEditColumn
