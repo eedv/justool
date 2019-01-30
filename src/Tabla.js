@@ -1,6 +1,11 @@
 import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
-import { EditingState, SummaryState, IntegratedSummary, DataTypeProvider } from '@devexpress/dx-react-grid';
+import {
+  EditingState,
+  SummaryState,
+  IntegratedSummary,
+  DataTypeProvider
+} from '@devexpress/dx-react-grid';
 import {
   Getter,
 } from '@devexpress/dx-react-core';
