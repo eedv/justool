@@ -1,5 +1,5 @@
 {
   "builds": [
-   { "src": "package.json", "use": "@now/static-build", "config": { "distDir": "public" } }
+   { "src": "package.json", "use": "@now/static-build", "config": { "distDir": "build" } }
  ]
 }
