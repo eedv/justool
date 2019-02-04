@@ -1,5 +1,11 @@
 import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
+import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
+import SaveIcon from "@material-ui/icons/Save";
+import CancelIcon from "@material-ui/icons/Cancel";
 import {
   EditingState,
   SummaryState,
@@ -27,8 +33,47 @@ const CurrencyTypeProvider = props => (
     {...props}
   />
 );
+const AddButton = ({ onExecute }) => (
+  <div style={{ textAlign: "center" }}>
+    <Button color="primary" onClick={onExecute} title="Create new row">
+      Agregar
+    </Button>
+  </div>
+);
+const EditButton = ({ onExecute }) => (
+  <IconButton onClick={onExecute} title="Edit row">
+    <EditIcon />
+  </IconButton>
+);
 
+const DeleteButton = ({ onExecute }) => (
+  <IconButton onClick={onExecute} title="Delete row">
+    <DeleteIcon />
+  </IconButton>
+);
 
+const CommitButton = ({ onExecute }) => (
+  <IconButton onClick={onExecute} title="Save changes">
+    <SaveIcon />
+  </IconButton>
+);
+
+const CancelButton = ({ onExecute }) => (
+  <IconButton color="secondary" onClick={onExecute} title="Cancel changes">
+    <CancelIcon />
+  </IconButton>
+);
+const EditComponents = {
+  add: AddButton,
+  edit: EditButton,
+  delete: DeleteButton,
+  commit: CommitButton,
+  cancel: CancelButton
+};
+const EditCommands = ({ id, onExecute }) => {
+  const CommandButton = EditComponents[id];
+  return <CommandButton onExecute={onExecute} />;
+};
 const messages = {
   profit: 'Ganancia',
 };
@@ -132,6 +177,7 @@ export default class Tabla extends React.PureComponent {
           />
           <TableEditRow />
           <TableEditColumn
+            commandComponent={EditCommands}
             showAddCommand
             showEditCommand
             showDeleteCommand
