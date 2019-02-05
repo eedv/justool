@@ -47,8 +47,8 @@ const styles = theme => ({
 });
 
 const drawerConfig = [
-  {name: 'min25Percent', type: 'textfield', label: 'Min 25%'},
-  {name: 'min30Percent', type: 'textfield', label: 'Min 30%'},
+  {name: 'min25Percent', type: 'textfield', label: 'Min 25%', defaultValue: 1600},
+  {name: 'min30Percent', type: 'textfield', label: 'Min 30%', defaultValue: 2800},
   {name: 'minAnfitriona', type: 'textfield', label: 'Min anfitriona'}
 ]
 

@@ -14,7 +14,10 @@ const DrawerToolbar = (props) => {
 			<List>
 				{ctrlConfig.map((ctrl, index) => (
 					<ListItem key={index}>
-					<TextField label={ctrl.label} onChange={(e) => onInputChange(ctrl.name, e.target.value)}/>
+					<TextField
+						label={ctrl.label}
+						value={ctrl.defaultValue}
+						onChange={(e) => onInputChange(ctrl.name, e.target.value)}/>
 					</ListItem>
 				))}
 			</List>
