@@ -11,6 +11,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import Autocomplete from './Autocomplete';
 
 const drawerWidth = 240;
 
@@ -55,6 +56,10 @@ const drawerConfig = [
 class App extends React.Component {
   state = {
     mobileOpen: false,
+    productList: [],
+    order: [],
+    min25Percent: 1600,
+    min30Percent: 2800
   };
 
   handleDrawerToggle = () => {
@@ -62,7 +67,32 @@ class App extends React.Component {
   };
 
   handlePercentChange = (name, value) => {
-    this.setState({[name]: value});
+    let percent = {[name]: Number(value)}
+    this.setState(percent);
+  }
+
+  handleProductSelect = (name) => {
+    const product = this.state.productList.find((prod) => prod.name === name);
+    const order = this.state.order.slice();
+    order.push(product);
+    this.setState({order})
+  }
+
+  handleCommitChanges = (order) => {
+
+    this.setState({order})
+  }
+
+  componentDidMount() {
+    fetch('https://japi.now.sh/products').then((res) => {
+      return res.json()
+    }).then((products) => {
+      products = products.map((product, index) => {
+        product.id = index;
+        return product;
+      })
+      this.setState({productList: products});
+    })
   }
 
   render() {
@@ -115,7 +145,17 @@ class App extends React.Component {
         </nav>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-			    <Tabla min25Percent={this.state.min25Percent} min30Percent={this.state.min30Percent}/>
+          <Autocomplete
+            suggestions={this.state.productList}
+            labelValue="name"
+            onChange={this.handleProductSelect}
+          ></Autocomplete>
+          <Tabla
+            rows={this.state.order}
+            handleCommitChanges={this.handleCommitChanges}
+            min25Percent={this.state.min25Percent}
+            min30Percent={this.state.min30Percent}
+          />
         </main>
       </div>
     );
