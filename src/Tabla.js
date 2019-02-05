@@ -29,7 +29,7 @@ const getRowId = row => row.id;
 
 const CurrencyTypeProvider = props => (
   <DataTypeProvider
-    formatterComponent={({ value }) => `$${value}`}
+    formatterComponent={({ value }) => `$ ${value}`}
     {...props}
   />
 );
@@ -76,6 +76,7 @@ const EditCommands = ({ id, onExecute }) => {
 };
 const messages = {
   profit: 'Ganancia',
+  sum: 'Total'
 };
 export default class Tabla extends React.PureComponent {
   constructor(props) {
@@ -83,18 +84,14 @@ export default class Tabla extends React.PureComponent {
 
     this.state = {
       columns: [
-        { name: 'name', title: 'Nombre del producto' },
-        { name: 'pricePerUnit', title: 'Precio por unidad' },
-        { name: 'qty', title: 'Cantidad', type: Number },
+        { name: 'name', title: 'Nombre del producto', type: String },
+        { name: 'price', title: 'Precio por unidad', type: Number  },
+        { name: 'qty', title: 'Cantidad', type: Number, getCellValue: row => row.qty || 1 },
         { name: 'subtotal', title: 'Sub total', getCellValue: row => {
-          return row.pricePerUnit && row.qty ? Number(row.pricePerUnit) * Number(row.qty) : '0'
+          return row.price && row.qty ? Number(row.price) * Number(row.qty) : 0
         }}
       ],
-      rows: [
-        {id: 1, name: 'a', pricePerUnit: 300, qty: 2, subtotal: 600},
-        {id: 2, name: 'a', pricePerUnit: 500, qty: 2, subtotal: 1000}
-      ],
-      currencyColumns: ['subtotal'],
+      currencyColumns: ['subtotal', 'price'],
       tableColumnExtensions: [
         { columnName: 'name', wordWrapEnabled: true },
       ],
@@ -116,12 +113,20 @@ export default class Tabla extends React.PureComponent {
       const {min25Percent, min30Percent} = this.props;
       let total = IntegratedSummary.defaultCalculator('sum', rows, getValue);
       let profitPercentage = total >= min30Percent ? 30 : (total >= min25Percent) ? 25 : 0;
-      return `${total * profitPercentage / 100} (${profitPercentage})`;
+      let ammountTo25 = Math.max(min25Percent - total, 0) ;
+      let ammountTo30 = Math.max(min30Percent - total, 0);
+      let profitMsg = ammountTo25 > 0
+        ? `$ ${ammountTo25} para el 25% y $ ${ammountTo30} para el 30%`
+        : ammountTo30 > 0
+          ? `$ ${ammountTo30} para el 30%`
+          : '';
+      return `${total * profitPercentage / 100} ( ${profitPercentage}% ${profitMsg})`.trim();
     }
     return IntegratedSummary.defaultCalculator(type, rows, getValue);
   };
-  commitChanges({ added, changed, deleted }) {
-    let { rows } = this.state;
+  commitChanges = ({ added, changed, deleted }) => {
+    let { rows } = this.props
+    let { handleCommitChanges } = this.props;
     if (added) {
       const startingAddedId = rows.length > 0 ? rows[rows.length - 1].id + 1 : 0;
       rows = [
@@ -139,14 +144,14 @@ export default class Tabla extends React.PureComponent {
       const deletedSet = new Set(deleted);
       rows = rows.filter(row => !deletedSet.has(row.id));
     }
-    this.setState({ rows });
+    handleCommitChanges(rows)
   }
 
   render() {
     const {
-      rows, columns, totalSummaryItems, currencyColumns
+      columns, totalSummaryItems, currencyColumns
      } = this.state;
-
+    const {rows} = this.props
     return (
       <Paper>
         <Grid
