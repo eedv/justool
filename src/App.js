@@ -48,22 +48,19 @@ const styles = theme => ({
   },
 });
 
-const drawerConfig = [
-  {name: 'min25Percent', type: 'textfield', label: 'Min 25%', defaultValue: 1600},
-  {name: 'min30Percent', type: 'textfield', label: 'Min 30%', defaultValue: 2800},
-  {name: 'anfCharges', type: 'textfield', label: 'Cargo por anfitriona', defaultValue: 398.19},
-  {name: 'adminCharges', type: 'textfield', label: 'Gastos administrativos', defaultValue: 121}
-]
+
 
 class App extends React.Component {
   state = {
     mobileOpen: false,
     productList: [],
     order: [],
-    min25Percent: 1600,
-    min30Percent: 2800,
-    anfCharges: 398.19,
-    adminCharges: 121
+    configs: {
+      min25Percent: 1600,
+      min30Percent: 2800,
+      anfCharges: 398.19,
+      adminCharges: 121
+    }
   };
 
   handleDrawerToggle = () => {
@@ -71,19 +68,14 @@ class App extends React.Component {
   };
 
   handleConfigChanges = (name, value) => {
-    let percent = {[name]: Number(value)}
-    this.setState(percent);
+    let percent = Object.assign({}, this.state.configs, {[name]: Number(value)})
+    this.setState({configs: percent});
   }
 
   handleProductSelect = (name) => {
     const product = this.state.productList.find((prod) => prod.name === name);
     const order = this.state.order.slice();
     order.push(product);
-    this.setState({order})
-  }
-
-  handleCommitChanges = (order) => {
-
     this.setState({order})
   }
 
@@ -130,7 +122,7 @@ class App extends React.Component {
               onClose={this.handleDrawerToggle}
               classes={{paper: classes.drawerPaper}}
             >
-              <DrawerToolbar ctrlConfig={drawerConfig} classes={classes} onInputChange={this.handleConfigChanges}/>
+              <DrawerToolbar configValues={this.state.configs} classes={classes} onInputChange={this.handleConfigChanges}/>
             </Drawer>
           </Hidden>
           <Hidden smDown implementation="css">
@@ -141,7 +133,7 @@ class App extends React.Component {
               variant="permanent"
               open
             >
-              <DrawerToolbar ctrlConfig={drawerConfig} classes={classes} onInputChange={this.handleConfigChanges}/>
+              <DrawerToolbar configValues={this.state.configs} classes={classes} onInputChange={this.handleConfigChanges}/>
             </Drawer>
           </Hidden>
         </nav>
@@ -154,10 +146,10 @@ class App extends React.Component {
           ></Autocomplete>
           <CustomTable
             rows={this.state.order}
-            min25Percent={this.state.min25Percent}
-            min30Percent={this.state.min30Percent}
-            anfCharges={this.state.anfCharges}
-            adminCharges={this.state.adminCharges}
+            min25Percent={this.state.configs.min25Percent}
+            min30Percent={this.state.configs.min30Percent}
+            anfCharges={this.state.configs.anfCharges}
+            adminCharges={this.state.configs.adminCharges}
             taxRate={6}
           />
         </main>
