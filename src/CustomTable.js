@@ -8,7 +8,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
-const TAX_RATE = 7;
 
 const styles = theme => ({
   root: {
@@ -22,7 +21,7 @@ const styles = theme => ({
 });
 
 function ccyFormat(num) {
-  return `${num.toFixed(2)}`;
+  return `$ ${num.toFixed(2)}`;
 }
 
 function priceRow(qty, unit) {
@@ -38,13 +37,11 @@ function subtotal(items) {
   return items.map(({ price }) => price).reduce((sum, i) => sum + i, 0);
 }
 
-
-
 function SpanningTable(props) {
 const { classes, rows, taxRate, anfCharges, adminCharges} = props;
 const invoiceSubtotal = subtotal(rows);
 const invoiceTaxes = taxRate * invoiceSubtotal / 100;
-const invoiceTotal =  invoiceSubtotal - invoiceTaxes;
+const invoiceTotal =  invoiceSubtotal - invoiceTaxes - anfCharges - adminCharges;
   return (
     <Paper className={classes.root}>
       <Table className={classes.table}>
@@ -72,12 +69,12 @@ const invoiceTotal =  invoiceSubtotal - invoiceTaxes;
           </TableRow>
 		  <TableRow>
             <TableCell>Cargos administrativos</TableCell>
-            <TableCell align="right">{`${(adminCharges).toFixed(0)} %`}</TableCell>
+            <TableCell align="right">{`${(adminCharges).toFixed(0)}`}</TableCell>
             <TableCell align="right">{ccyFormat(adminCharges)}</TableCell>
           </TableRow>
 		  <TableRow>
             <TableCell>Cargo por anfitriona</TableCell>
-            <TableCell align="right">{`${(anfCharges).toFixed(0)} %`}</TableCell>
+            <TableCell align="right">{`${(anfCharges).toFixed(0)}`}</TableCell>
             <TableCell align="right">{ccyFormat(anfCharges)}</TableCell>
           </TableRow>
           <TableRow>
