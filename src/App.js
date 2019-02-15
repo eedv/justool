@@ -6,7 +6,6 @@ import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 
-
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -48,8 +47,6 @@ const styles = theme => ({
   },
 });
 
-
-
 class App extends React.Component {
   state = {
     mobileOpen: false,
@@ -74,9 +71,16 @@ class App extends React.Component {
 
   handleProductSelect = (name) => {
     const product = this.state.productList.find((prod) => prod.name === name);
+    product.qty = 1;
     const order = this.state.order.slice();
     order.push(product);
-    this.setState({order})
+    this.setState({order});
+  }
+
+  handleTableChange = (rowId, value) => {
+    const order = this.state.order.slice();
+    Object.assign(order.find((row) => row._id === rowId), value);
+    this.setState({order});
   }
 
   componentDidMount() {
@@ -146,6 +150,7 @@ class App extends React.Component {
           ></Autocomplete>
           <CustomTable
             rows={this.state.order}
+            onTableChange={this.handleTableChange}
             min25Percent={this.state.configs.min25Percent}
             min30Percent={this.state.configs.min30Percent}
             anfCharges={this.state.configs.anfCharges}
