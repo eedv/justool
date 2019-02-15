@@ -77,9 +77,14 @@ class App extends React.Component {
     this.setState({order});
   }
 
-  handleTableChange = (rowId, value) => {
+  handleTableChange = (actionType, rowData) => {
     const order = this.state.order.slice();
-    Object.assign(order.find((row) => row._id === rowId), value);
+    if(actionType === 'edit') {
+      Object.assign(order.find((row) => row._id === rowData._id), rowData);
+    }
+    else if(actionType === 'remove') {
+      order.splice(order.findIndex((row) => row._id === rowData._id), 1);
+    }
     this.setState({order});
   }
 

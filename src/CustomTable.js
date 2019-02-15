@@ -7,6 +7,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { TextField } from '@material-ui/core';
 
 
@@ -61,12 +63,19 @@ function SpanningTable(props) {
         <TableBody>
           {rows.map(row => (
             <TableRow key={row._id}>
+              <TableCell>
+                <IconButton
+                  onClick={(e) => onTableChange('remove', {_id: row._id})}
+                  aria-label="Remueve un producto de la lista">
+                  <DeleteIcon />
+                </IconButton>
+              </TableCell>
               <TableCell>{row.name}</TableCell>
               <TableCell align="right">
                 <TextField
                   type="number"
                   value={row.qty}
-                  onChange={(e) => onTableChange(row._id, {qty: e.target.value})
+                  onChange={(e) => onTableChange('edit', {_id: row._id, qty: e.target.value})
                   }>
                 </TextField>
               </TableCell>
