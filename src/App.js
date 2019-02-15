@@ -57,7 +57,8 @@ class App extends React.Component {
       min25Percent: 1600,
       min30Percent: 2800,
       anfCharges: 398.19,
-      adminCharges: 121
+      adminCharges: 121,
+      showDetails: false
     }
   };
 
@@ -160,6 +161,7 @@ class App extends React.Component {
             min30Percent={this.state.configs.min30Percent}
             anfCharges={this.state.configs.anfCharges}
             adminCharges={this.state.configs.adminCharges}
+            showDetails={this.state.configs.showDetails}
             taxRate={6}
           />
         </main>
