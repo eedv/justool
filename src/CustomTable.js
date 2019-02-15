@@ -35,17 +35,18 @@ function createRow(id, name, qty, price) {
 }
 
 function subtotal(items) {
-  return items.map(({ price }) => price).reduce((sum, i) => sum + i, 0);
+  return items.reduce((sum, row) => sum + (row.price * row.qty), 0);
 }
 
-
-
 function SpanningTable(props) {
-  const { classes, rows, taxRate, anfCharges, adminCharges, onTableChange} = props;
+  const { classes, rows, taxRate, anfCharges, adminCharges, onTableChange, min25Percent, min30Percent} = props;
   const invoiceSubtotal = subtotal(rows);
   const invoiceTaxes = taxRate * invoiceSubtotal / 100;
-  const invoiceTotal = invoiceSubtotal - invoiceTaxes - anfCharges - adminCharges;
 
+  const justDiscountPercent = invoiceSubtotal >= min30Percent ? 30 : invoiceSubtotal >= min25Percent ? 25 : 0;
+  const justDiscount = (invoiceSubtotal * justDiscountPercent) / 100;
+  const ivaDiscount = (invoiceSubtotal - justDiscount) - (invoiceSubtotal - justDiscount) / 1.105;
+  const invoiceTotal = invoiceSubtotal - justDiscount - ivaDiscount + invoiceTaxes + anfCharges + adminCharges;
   return (
     <Paper className={classes.root}>
       <Table className={classes.table}>
@@ -74,9 +75,19 @@ function SpanningTable(props) {
             </TableRow>
           ))}
           <TableRow>
-            <TableCell rowSpan={5} />
+            <TableCell rowSpan={6} />
             <TableCell>Subtotal</TableCell>
             <TableCell colSpan={2} align="right">{ccyFormat(invoiceSubtotal)}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Descuento Just</TableCell>
+            <TableCell align="right">{`${justDiscountPercent} %`}</TableCell>
+            <TableCell align="right">{ccyFormat(justDiscount)}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Descuento IVA</TableCell>
+            <TableCell align="right">{`${10.5} %`}</TableCell>
+            <TableCell align="right">{ccyFormat(ivaDiscount)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Cargos administrativos</TableCell>
@@ -89,13 +100,21 @@ function SpanningTable(props) {
             <TableCell align="right">{ccyFormat(anfCharges)}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Tax</TableCell>
+            <TableCell>IIBB Provincial</TableCell>
             <TableCell align="right">{`${(taxRate).toFixed(0)} %`}</TableCell>
             <TableCell align="right">{ccyFormat(invoiceTaxes)}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell colSpan={2}>Total</TableCell>
+            <TableCell colSpan={3}>Total a pagar</TableCell>
             <TableCell align="right">{ccyFormat(invoiceTotal)}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell colSpan={3}>Total a cobrar</TableCell>
+            <TableCell align="right">{ccyFormat(invoiceSubtotal)}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell colSpan={3}>Ganancia potencial</TableCell>
+            <TableCell align="right">{ccyFormat(invoiceSubtotal - invoiceTotal)}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
