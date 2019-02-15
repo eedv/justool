@@ -31,11 +31,6 @@ function priceRow(price, qty) {
   return price * qty;
 }
 
-function createRow(id, name, qty, price) {
-  const subtotal = priceRow(qty, price);
-  return { id, name, qty, price, subtotal };
-}
-
 function subtotal(items) {
   return items.reduce((sum, row) => sum + (row.price * row.qty), 0);
 }
