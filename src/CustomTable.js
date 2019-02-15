@@ -20,8 +20,19 @@ const styles = theme => ({
   },
   table: {
     minWidth: 700,
-  },
+  }
 });
+
+const CustomTableCell = withStyles(theme => ({
+  head: {
+    padding: '4px 24px 4px 24px',
+  },
+  body: {
+    fontSize: 14,
+    padding: '4px 24px 4px 24px',
+    minWidth: 50
+  },
+}))(TableCell);
 
 function ccyFormat(num) {
   return `$ ${num.toFixed(2)}`;
@@ -36,7 +47,7 @@ function subtotal(items) {
 }
 
 function SpanningTable(props) {
-  const { classes, rows, taxRate, anfCharges, adminCharges, onTableChange, min25Percent, min30Percent} = props;
+  const { classes, rows, taxRate, anfCharges, adminCharges, onTableChange, min25Percent, min30Percent, showDetails} = props;
   const invoiceSubtotal = subtotal(rows);
   const invoiceTaxes = taxRate * invoiceSubtotal / 100;
 
@@ -49,76 +60,78 @@ function SpanningTable(props) {
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
-            <TableCell>Producto</TableCell>
-            <TableCell align="right">Cantidad</TableCell>
-            <TableCell align="right">Precio unitario</TableCell>
-            <TableCell align="right">Subtotal</TableCell>
+            <CustomTableCell></CustomTableCell>
+            <CustomTableCell>Producto</CustomTableCell>
+            <CustomTableCell align="right">Cantidad</CustomTableCell>
+            <CustomTableCell align="right">Precio unitario</CustomTableCell>
+            <CustomTableCell align="right">Subtotal</CustomTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map(row => (
             <TableRow key={row._id}>
-              <TableCell>
+              <CustomTableCell>
                 <IconButton
                   onClick={(e) => onTableChange('remove', {_id: row._id})}
                   aria-label="Remueve un producto de la lista">
-                  <DeleteIcon />
+                  <DeleteIcon  fontSize="small"/>
                 </IconButton>
-              </TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell align="right">
+              </CustomTableCell>
+              <CustomTableCell>{row.name}</CustomTableCell>
+              <CustomTableCell align="right">
                 <TextField
                   type="number"
                   value={row.qty}
+                  style={{width: 50}}
                   onChange={(e) => onTableChange('edit', {_id: row._id, qty: e.target.value})
                   }>
                 </TextField>
-              </TableCell>
-              <TableCell align="right">{ccyFormat(row.price)}</TableCell>
-              <TableCell align="right">{ccyFormat(priceRow(row.price, row.qty))}</TableCell>
+              </CustomTableCell>
+              <CustomTableCell align="right">{ccyFormat(row.price)}</CustomTableCell>
+              <CustomTableCell align="right">{ccyFormat(priceRow(row.price, row.qty))}</CustomTableCell>
             </TableRow>
           ))}
           <TableRow>
-            <TableCell rowSpan={6} />
-            <TableCell>Subtotal</TableCell>
-            <TableCell colSpan={2} align="right">{ccyFormat(invoiceSubtotal)}</TableCell>
+            <CustomTableCell rowSpan={9} colSpan={2}/>
+            <CustomTableCell>Subtotal</CustomTableCell>
+            <CustomTableCell colSpan={2} align="right">{ccyFormat(invoiceSubtotal)}</CustomTableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Descuento Just</TableCell>
-            <TableCell align="right">{`${justDiscountPercent} %`}</TableCell>
-            <TableCell align="right">{ccyFormat(justDiscount)}</TableCell>
+            <CustomTableCell>Descuento Just</CustomTableCell>
+            <CustomTableCell align="right">{`${justDiscountPercent} %`}</CustomTableCell>
+            <CustomTableCell align="right">{ccyFormat(justDiscount)}</CustomTableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Descuento IVA</TableCell>
-            <TableCell align="right">{`${10.5} %`}</TableCell>
-            <TableCell align="right">{ccyFormat(ivaDiscount)}</TableCell>
+            <CustomTableCell>Descuento IVA</CustomTableCell>
+            <CustomTableCell align="right">{`${10.5} %`}</CustomTableCell>
+            <CustomTableCell align="right">{ccyFormat(ivaDiscount)}</CustomTableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Cargos administrativos</TableCell>
-            <TableCell align="right">{`${(adminCharges).toFixed(0)}`}</TableCell>
-            <TableCell align="right">{ccyFormat(adminCharges)}</TableCell>
+            <CustomTableCell>Cargos administrativos</CustomTableCell>
+            <CustomTableCell align="right">{`${(adminCharges).toFixed(0)}`}</CustomTableCell>
+            <CustomTableCell align="right">{ccyFormat(adminCharges)}</CustomTableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Cargo por anfitriona</TableCell>
-            <TableCell align="right">{`${(anfCharges).toFixed(0)}`}</TableCell>
-            <TableCell align="right">{ccyFormat(anfCharges)}</TableCell>
+            <CustomTableCell>Cargo por anfitriona</CustomTableCell>
+            <CustomTableCell align="right">{`${(anfCharges).toFixed(0)}`}</CustomTableCell>
+            <CustomTableCell align="right">{ccyFormat(anfCharges)}</CustomTableCell>
           </TableRow>
           <TableRow>
-            <TableCell>IIBB Provincial</TableCell>
-            <TableCell align="right">{`${(taxRate).toFixed(0)} %`}</TableCell>
-            <TableCell align="right">{ccyFormat(invoiceTaxes)}</TableCell>
+            <CustomTableCell>IIBB Provincial</CustomTableCell>
+            <CustomTableCell align="right">{`${(taxRate).toFixed(0)} %`}</CustomTableCell>
+            <CustomTableCell align="right">{ccyFormat(invoiceTaxes)}</CustomTableCell>
           </TableRow>
           <TableRow>
-            <TableCell colSpan={3}>Total a pagar</TableCell>
-            <TableCell align="right">{ccyFormat(invoiceTotal)}</TableCell>
+            <CustomTableCell colSpan={2}>Total a pagar</CustomTableCell>
+            <CustomTableCell align="right">{ccyFormat(invoiceTotal)}</CustomTableCell>
           </TableRow>
           <TableRow>
-            <TableCell colSpan={3}>Total a cobrar</TableCell>
-            <TableCell align="right">{ccyFormat(invoiceSubtotal)}</TableCell>
+            <CustomTableCell colSpan={2}>Total a cobrar</CustomTableCell>
+            <CustomTableCell align="right">{ccyFormat(invoiceSubtotal)}</CustomTableCell>
           </TableRow>
           <TableRow>
-            <TableCell colSpan={3}>Ganancia potencial</TableCell>
-            <TableCell align="right">{ccyFormat(invoiceSubtotal - invoiceTotal)}</TableCell>
+            <CustomTableCell colSpan={2}>Ganancia potencial</CustomTableCell>
+            <CustomTableCell align="right">{ccyFormat(invoiceSubtotal - invoiceTotal)}</CustomTableCell>
           </TableRow>
         </TableBody>
       </Table>
