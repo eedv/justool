@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Autocomplete from './Autocomplete';
 
+import LocalStorage from './LocalStorage';
 
 const drawerWidth = 240;
 
@@ -69,26 +70,25 @@ class App extends React.Component {
     this.setState({configs: percent});
   }
 
-  handleProductSelect = (name) => {
-    const product = this.state.productList.find((prod) => prod.name === name);
-    product.qty = 1;
-    const order = this.state.order.slice();
-    order.push(product);
-    this.setState({order});
-  }
-
   handleTableChange = (actionType, rowData) => {
     const order = this.state.order.slice();
-    if(actionType === 'edit') {
+    if(actionType === 'add') {
+      const product = this.state.productList.find((prod) => prod.name === rowData.name);
+      product.qty = 1;
+      order.push(product);
+    }
+    else if(actionType === 'edit') {
       Object.assign(order.find((row) => row._id === rowData._id), rowData);
     }
     else if(actionType === 'remove') {
       order.splice(order.findIndex((row) => row._id === rowData._id), 1);
     }
     this.setState({order});
+    LocalStorage.set('default', order);
   }
 
   componentDidMount() {
+    this.setState({order: LocalStorage.get('default')});
     fetch('https://japi.now.sh/products').then((res) => {
       return res.json()
     }).then((products) => {
@@ -151,7 +151,7 @@ class App extends React.Component {
           <Autocomplete
             suggestions={this.state.productList}
             labelValue="name"
-            onChange={this.handleProductSelect}
+            onChange={(name) => this.handleTableChange('add', {name})}
           ></Autocomplete>
           <CustomTable
             rows={this.state.order}
