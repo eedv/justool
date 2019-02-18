@@ -67,8 +67,9 @@ class App extends React.Component {
   };
 
   handleConfigChanges = (name, value) => {
-    let percent = Object.assign({}, this.state.configs, {[name]: Number(value)})
-    this.setState({configs: percent});
+    value = typeof value == 'string' ? Number(value) : value;
+    let config = Object.assign({}, this.state.configs, {[name]:value})
+    this.setState({configs: config});
   }
 
   handleTableChange = (actionType, rowData) => {
