@@ -47,14 +47,18 @@ function subtotal(items) {
 }
 
 function SpanningTable(props) {
-  const { classes, rows, taxRate, anfCharges, adminCharges, onTableChange, min25Percent, min30Percent, showDetails} = props;
-  const invoiceSubtotal = subtotal(rows);
+  const { classes, rows, taxRate, anfCharges = 0, adminCharges, onTableChange, min25Percent, min30Percent, showDetails} = props;
+  let pvpSubtotal = subtotal(rows);
+
+  const justDiscountPercent = pvpSubtotal >= min30Percent ? 30 : pvpSubtotal >= min25Percent ? 25 : 0;
+  const justDiscount = (pvpSubtotal * justDiscountPercent) / 100;
+  let invoiceSubtotal = pvpSubtotal - justDiscount;
+  const ivaDiscount = invoiceSubtotal - (invoiceSubtotal / 1.105);
+  invoiceSubtotal = invoiceSubtotal - ivaDiscount;
+
   const invoiceTaxes = taxRate * invoiceSubtotal / 100;
 
-  const justDiscountPercent = invoiceSubtotal >= min30Percent ? 30 : invoiceSubtotal >= min25Percent ? 25 : 0;
-  const justDiscount = (invoiceSubtotal * justDiscountPercent) / 100;
-  const ivaDiscount = (invoiceSubtotal - justDiscount) - (invoiceSubtotal - justDiscount) / 1.105;
-  const invoiceTotal = invoiceSubtotal - justDiscount - ivaDiscount + invoiceTaxes + anfCharges + adminCharges;
+  const invoiceTotal = invoiceSubtotal + invoiceTaxes + anfCharges + adminCharges;
   return (
     <Paper className={classes.root}>
       <Table className={classes.table}>
@@ -92,11 +96,12 @@ function SpanningTable(props) {
             </TableRow>
           ))}
           <TableRow>
-            <CustomTableCell rowSpan={9} colSpan={2}/>
-            <CustomTableCell>Subtotal</CustomTableCell>
-            <CustomTableCell colSpan={2} align="right">{ccyFormat(invoiceSubtotal)}</CustomTableCell>
+            <CustomTableCell colSpan={2}/>
+            <CustomTableCell>Subtotal PvP</CustomTableCell>
+            <CustomTableCell colSpan={2} align="right">{ccyFormat(pvpSubtotal)}</CustomTableCell>
           </TableRow>
           <TableRow>
+            <CustomTableCell rowSpan={2} colSpan={2}/>
             <CustomTableCell>Descuento Just</CustomTableCell>
             <CustomTableCell align="right">{`${justDiscountPercent} %`}</CustomTableCell>
             <CustomTableCell align="right">{ccyFormat(justDiscount)}</CustomTableCell>
@@ -107,6 +112,7 @@ function SpanningTable(props) {
             <CustomTableCell align="right">{ccyFormat(ivaDiscount)}</CustomTableCell>
           </TableRow>
           <TableRow>
+            <CustomTableCell rowSpan={3} colSpan={2}/>
             <CustomTableCell>Cargos administrativos</CustomTableCell>
             <CustomTableCell align="right">{`${(adminCharges).toFixed(0)}`}</CustomTableCell>
             <CustomTableCell align="right">{ccyFormat(adminCharges)}</CustomTableCell>
@@ -122,16 +128,17 @@ function SpanningTable(props) {
             <CustomTableCell align="right">{ccyFormat(invoiceTaxes)}</CustomTableCell>
           </TableRow>
           <TableRow>
+            <CustomTableCell rowSpan={3} colSpan={2}/>
             <CustomTableCell colSpan={2}>Total a pagar</CustomTableCell>
             <CustomTableCell align="right">{ccyFormat(invoiceTotal)}</CustomTableCell>
           </TableRow>
           <TableRow>
             <CustomTableCell colSpan={2}>Total a cobrar</CustomTableCell>
-            <CustomTableCell align="right">{ccyFormat(invoiceSubtotal)}</CustomTableCell>
+            <CustomTableCell align="right">{ccyFormat(pvpSubtotal)}</CustomTableCell>
           </TableRow>
           <TableRow>
             <CustomTableCell colSpan={2}>Ganancia potencial</CustomTableCell>
-            <CustomTableCell align="right">{ccyFormat(invoiceSubtotal - invoiceTotal)}</CustomTableCell>
+            <CustomTableCell align="right">{ccyFormat(pvpSubtotal - invoiceTotal)}</CustomTableCell>
           </TableRow>
         </TableBody>
       </Table>
