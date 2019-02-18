@@ -46,6 +46,41 @@ function subtotal(items) {
   return items.reduce((sum, row) => sum + (row.price * row.qty), 0);
 }
 
+function Details(props) {
+  const {justDiscountPercent, justDiscount, ivaDiscount, invoiceTaxes, adminCharges, anfCharges, taxRate} = props;
+  //const {adminCharges, anfCharges, taxRate} = this.props;
+  return <>
+      <TableRow>
+        <CustomTableCell rowSpan={5} colSpan={1}>Detalles</CustomTableCell>
+        <CustomTableCell rowSpan={2} colSpan={1}>Descuentos</CustomTableCell>
+        <CustomTableCell>Descuento Just</CustomTableCell>
+        <CustomTableCell align="right">{`${justDiscountPercent} %`}</CustomTableCell>
+        <CustomTableCell align="right">{ccyFormat(justDiscount)}</CustomTableCell>
+      </TableRow>
+      <TableRow>
+        <CustomTableCell>Descuento IVA</CustomTableCell>
+        <CustomTableCell align="right">{`${10.5} %`}</CustomTableCell>
+        <CustomTableCell align="right">{ccyFormat(ivaDiscount)}</CustomTableCell>
+      </TableRow>
+      <TableRow>
+        <CustomTableCell rowSpan={3} colSpan={1}>Cargos e impuestos</CustomTableCell>
+        <CustomTableCell>Cargos administrativos</CustomTableCell>
+        <CustomTableCell align="right">{`${(adminCharges).toFixed(0)}`}</CustomTableCell>
+        <CustomTableCell align="right">{ccyFormat(adminCharges)}</CustomTableCell>
+      </TableRow>
+      <TableRow>
+        <CustomTableCell>Cargo por anfitriona</CustomTableCell>
+        <CustomTableCell align="right">{`${(anfCharges).toFixed(0)}`}</CustomTableCell>
+        <CustomTableCell align="right">{ccyFormat(anfCharges)}</CustomTableCell>
+      </TableRow>
+      <TableRow>
+        <CustomTableCell>IIBB Provincial</CustomTableCell>
+        <CustomTableCell align="right">{`${(taxRate).toFixed(0)} %`}</CustomTableCell>
+        <CustomTableCell align="right">{ccyFormat(invoiceTaxes)}</CustomTableCell>
+      </TableRow>
+  </>
+}
+
 function SpanningTable(props) {
   const { classes, rows, taxRate, anfCharges = 0, adminCharges, onTableChange, min25Percent, min30Percent, showDetails} = props;
   let pvpSubtotal = subtotal(rows);
@@ -100,35 +135,16 @@ function SpanningTable(props) {
             <CustomTableCell>Subtotal PvP</CustomTableCell>
             <CustomTableCell colSpan={2} align="right">{ccyFormat(pvpSubtotal)}</CustomTableCell>
           </TableRow>
+          {showDetails ? <Details
+            justDiscountPercent={justDiscountPercent}
+            justDiscount={justDiscount}
+            ivaDiscount={ivaDiscount}
+            invoiceTaxes={invoiceTaxes}
+            {...props}
+            ></Details> : null}
+
           <TableRow>
-            <CustomTableCell rowSpan={2} colSpan={2}/>
-            <CustomTableCell>Descuento Just</CustomTableCell>
-            <CustomTableCell align="right">{`${justDiscountPercent} %`}</CustomTableCell>
-            <CustomTableCell align="right">{ccyFormat(justDiscount)}</CustomTableCell>
-          </TableRow>
-          <TableRow>
-            <CustomTableCell>Descuento IVA</CustomTableCell>
-            <CustomTableCell align="right">{`${10.5} %`}</CustomTableCell>
-            <CustomTableCell align="right">{ccyFormat(ivaDiscount)}</CustomTableCell>
-          </TableRow>
-          <TableRow>
-            <CustomTableCell rowSpan={3} colSpan={2}/>
-            <CustomTableCell>Cargos administrativos</CustomTableCell>
-            <CustomTableCell align="right">{`${(adminCharges).toFixed(0)}`}</CustomTableCell>
-            <CustomTableCell align="right">{ccyFormat(adminCharges)}</CustomTableCell>
-          </TableRow>
-          <TableRow>
-            <CustomTableCell>Cargo por anfitriona</CustomTableCell>
-            <CustomTableCell align="right">{`${(anfCharges).toFixed(0)}`}</CustomTableCell>
-            <CustomTableCell align="right">{ccyFormat(anfCharges)}</CustomTableCell>
-          </TableRow>
-          <TableRow>
-            <CustomTableCell>IIBB Provincial</CustomTableCell>
-            <CustomTableCell align="right">{`${(taxRate).toFixed(0)} %`}</CustomTableCell>
-            <CustomTableCell align="right">{ccyFormat(invoiceTaxes)}</CustomTableCell>
-          </TableRow>
-          <TableRow>
-            <CustomTableCell rowSpan={3} colSpan={2}/>
+            <CustomTableCell rowSpan={3} colSpan={2}>Resumen</CustomTableCell>
             <CustomTableCell colSpan={2}>Total a pagar</CustomTableCell>
             <CustomTableCell align="right">{ccyFormat(invoiceTotal)}</CustomTableCell>
           </TableRow>

@@ -2,7 +2,8 @@ import React from 'react';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import FormGroup from '@material-ui/core/FormGroup';
 import TextField from '@material-ui/core/TextField'
 import { Switch } from '@material-ui/core';
 const DrawerToolbar = (props) => {
@@ -24,11 +25,17 @@ const DrawerToolbar = (props) => {
 			/>)
 		}
 		else if(config.type === 'switch') {
-			item = (<Switch
-				checked={configValues[config.name]}
-				onChange={(e) => onInputChange('showDetails', e.target.checked)}
-				value="checkedA"
-			></Switch>)
+			item = (
+				<FormGroup >
+					<FormControlLabel
+						checked={configValues[config.name]}
+						onChange={(e) => onInputChange('showDetails', e.target.checked)}
+						control={<Switch></Switch>}
+						label="Mostrar detalles"
+					>
+					</FormControlLabel>
+				</FormGroup>
+			)
 		}
 		return item;
 	}
