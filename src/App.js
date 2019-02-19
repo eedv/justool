@@ -13,6 +13,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Autocomplete from './Autocomplete';
 
 import LocalStorage from './LocalStorage';
+import Utils from './Utils';
 
 const drawerWidth = 240;
 
@@ -91,10 +92,12 @@ class App extends React.Component {
 
   componentDidMount() {
     this.setState({order: LocalStorage.get('default')});
-    fetch('https://japi.now.sh/products').then((res) => {
+    let period = Utils.getMonth();
+    let week = Utils.getWeek();
+    fetch(`https://justoolapi.herokuapp.com/products?period=${period}&week=${week}`).then((res) => {
       return res.json()
-    }).then((products) => {
-      products = products.map((product, index) => {
+    }).then((period) => {
+      let products = period.products.map((product, index) => {
         product.id = index;
         return product;
       })
