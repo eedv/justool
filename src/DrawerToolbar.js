@@ -19,6 +19,7 @@ const DrawerToolbar = (props) => {
 		let item;
 		if(config.type === 'textfield') {
 			item = (<TextField
+				type="number"
 				label={config.label}
 				value={configValues[config.name]}
 				onChange={(e) => onInputChange(config.name, e.target.value)}
