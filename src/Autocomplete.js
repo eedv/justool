@@ -91,8 +91,8 @@ class Autocomplete extends React.Component {
 		  ? []
 		  : suggestions.filter(suggestion => {
 			  const keep =
-				count < 5 &&
-				suggestion[labelValue].slice(0, inputLength).toLowerCase() === inputValue;
+				count < 10 &&
+				suggestion[labelValue].toLowerCase().indexOf(inputValue) !== -1;
 
 			  if (keep) {
 				count += 1;
