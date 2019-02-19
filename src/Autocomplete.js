@@ -122,7 +122,7 @@ class Autocomplete extends React.Component {
 				  fullWidth: true,
 				  classes,
 				  InputProps: getInputProps({
-					placeholder: "Search a country (start with a)"
+					placeholder: "Buscar producto"
 				  })
 				})}
 				<div {...getMenuProps()}>
