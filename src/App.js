@@ -56,7 +56,7 @@ class App extends React.Component {
     configs: {
       min25Percent: 1600,
       min30Percent: 2800,
-      anfCharges: 398.19,
+      anfCharges: 0,
       adminCharges: 121,
       showDetails: false
     }
