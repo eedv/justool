@@ -89,11 +89,11 @@ function SpanningTable(props) {
   const justDiscount = (pvpSubtotal * justDiscountPercent) / 100;
   let invoiceSubtotal = pvpSubtotal - justDiscount;
   const ivaDiscount = invoiceSubtotal - (invoiceSubtotal / 1.105);
-  invoiceSubtotal = invoiceSubtotal - ivaDiscount;
+  invoiceSubtotal = invoiceSubtotal - ivaDiscount + anfCharges + adminCharges;
 
   const invoiceTaxes = taxRate * invoiceSubtotal / 100;
 
-  const invoiceTotal = invoiceSubtotal + invoiceTaxes + anfCharges + adminCharges;
+  const invoiceTotal = invoiceSubtotal + invoiceTaxes;
   return (
     <Paper className={classes.root}>
       <Table className={classes.table}>
