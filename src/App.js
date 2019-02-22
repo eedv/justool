@@ -76,10 +76,12 @@ class App extends React.Component {
   handleTableChange = (actionType, rowData) => {
     const order = this.state.order.slice();
     if(actionType === 'add') {
-      const product = this.state.productList.find((prod) => prod.name === rowData.name);
-      product.qty = 1;
-      order.push(product);
-    }
+      let alreadyAdded = !!order.find(prod => prod.name === rowData.name)
+      if(!alreadyAdded) {
+        const product = this.state.productList.find((prod) => prod.name === rowData.name);
+        product.qty = 1;
+        order.push(product);
+      }
     else if(actionType === 'edit') {
       Object.assign(order.find((row) => row._id === rowData._id), rowData);
     }
