@@ -108,10 +108,10 @@ function SpanningTable(props) {
         </TableHead>
         <TableBody>
           {rows.map(row => (
-            <TableRow key={row._id}>
+            <TableRow key={row.id}>
               <CustomTableCell>
                 <IconButton
-                  onClick={(e) => onTableChange('remove', {_id: row._id})}
+                  onClick={(e) => onTableChange('remove', {id: row.id})}
                   aria-label="Remueve un producto de la lista">
                   <DeleteIcon  fontSize="small"/>
                 </IconButton>
@@ -122,7 +122,7 @@ function SpanningTable(props) {
                   type="number"
                   value={row.qty}
                   style={{width: 50}}
-                  onChange={(e) => onTableChange('edit', {_id: row._id, qty: e.target.value})
+                  onChange={(e) => onTableChange('edit', {id: row.id, qty: e.target.value})
                   }>
                 </TextField>
               </CustomTableCell>

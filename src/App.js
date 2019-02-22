@@ -82,14 +82,15 @@ class App extends React.Component {
         product.qty = 1;
         order.push(product);
       }
+    }
     else if(actionType === 'edit') {
-      Object.assign(order.find((row) => row._id === rowData._id), rowData);
+      Object.assign(order.find((row) => row.id === rowData.id), rowData);
     }
     else if(actionType === 'remove') {
-      order.splice(order.findIndex((row) => row._id === rowData._id), 1);
+      order.splice(order.findIndex((row) => row.id === rowData.id), 1);
     }
     this.setState({order});
-    LocalStorage.set('default', order);
+    LocalStorage.set('default', order)
   }
 
   componentDidMount() {
