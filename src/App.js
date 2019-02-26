@@ -73,21 +73,21 @@ class App extends React.Component {
     this.setState({configs: config});
   }
 
-  handleTableChange = (actionType, rowData) => {
+  handleTableChange = (actionType, rowIndex, rowData) => {
     const order = this.state.order.slice();
     if(actionType === 'add') {
       let alreadyAdded = !!order.find(prod => prod.name === rowData.name)
       if(!alreadyAdded) {
-        const product = this.state.productList.find((prod) => prod.name === rowData.name);
-        product.qty = 1;
-        order.push(product);
-      }
+      const product = this.state.productList.find((prod) => prod.name === rowData.name);
+      product.qty = 1;
+      order.push(product);
+    }
     }
     else if(actionType === 'edit') {
-      Object.assign(order.find((row) => row.id === rowData.id), rowData);
+      Object.assign(order[rowIndex], rowData);
     }
     else if(actionType === 'remove') {
-      order.splice(order.findIndex((row) => row.id === rowData.id), 1);
+      order.splice(rowIndex, 1);
     }
     this.setState({order});
     LocalStorage.set('default', order)
@@ -100,11 +100,7 @@ class App extends React.Component {
     fetch(`https://justoolapi.herokuapp.com/products?period=${period}&week=${week}`).then((res) => {
       return res.json()
     }).then((period) => {
-      let products = period.products.map((product, index) => {
-        product.id = index;
-        return product;
-      })
-      this.setState({productList: products});
+      this.setState({productList: period.products});
     })
   }
 
@@ -159,7 +155,7 @@ class App extends React.Component {
           <Autocomplete
             suggestions={this.state.productList}
             labelValue="name"
-            onChange={(name) => this.handleTableChange('add', {name})}
+            onChange={(name) => this.handleTableChange('add', null, {name})}
           ></Autocomplete>
           <CustomTable
             rows={this.state.order}
