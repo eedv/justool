@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { TextField } from '@material-ui/core';
+import { TextField, Checkbox } from '@material-ui/core';
 
 
 const styles = theme => ({
@@ -43,7 +43,11 @@ function priceRow(price, qty) {
 }
 
 function subtotal(items) {
-  return items.reduce((sum, row) => sum + (row.price * row.qty), 0);
+  return items.reduce((sum, row) => !row.isStock ? sum + (row.price * row.qty) : sum, 0);
+}
+
+function getStockCost(items) {
+  return items.reduce((sum, row) => row.isStock ? sum + (row.price * row.qty) : sum, 0);
 }
 
 function Details(props) {
@@ -84,9 +88,11 @@ function Details(props) {
 function SpanningTable(props) {
   const { classes, rows, taxRate, anfCharges = 0, adminCharges, onTableChange, min25Percent, min30Percent, showDetails} = props;
   let pvpSubtotal = subtotal(rows);
-
+  let stockProducts = getStockCost(rows);
   const justDiscountPercent = pvpSubtotal >= min30Percent ? 30 : pvpSubtotal >= min25Percent ? 25 : 0;
   const justDiscount = (pvpSubtotal * justDiscountPercent) / 100;
+
+  stockProducts = ((stockProducts * (100 - justDiscountPercent)) / 100) / 1.105;
   let invoiceSubtotal = pvpSubtotal - justDiscount;
   const ivaDiscount = invoiceSubtotal - (invoiceSubtotal / 1.105);
   invoiceSubtotal = invoiceSubtotal - ivaDiscount + anfCharges + adminCharges;
@@ -100,6 +106,7 @@ function SpanningTable(props) {
         <TableHead>
           <TableRow>
             <CustomTableCell></CustomTableCell>
+            <CustomTableCell align="center">Stock</CustomTableCell>
             <CustomTableCell>Producto</CustomTableCell>
             <CustomTableCell align="left">Cantidad</CustomTableCell>
             <CustomTableCell align="left">Precio unitario</CustomTableCell>
@@ -115,6 +122,12 @@ function SpanningTable(props) {
                   aria-label="Remueve un producto de la lista">
                   <DeleteIcon  fontSize="small"/>
                 </IconButton>
+              </CustomTableCell>
+              <CustomTableCell align="center">
+                <Checkbox
+                  checked={row.isStock}
+                  onChange={(e) => onTableChange('edit', index, {isStock: e.target.checked})}
+                ></Checkbox>
               </CustomTableCell>
               <CustomTableCell>{row.name}</CustomTableCell>
               <CustomTableCell align="left">
@@ -151,11 +164,11 @@ function SpanningTable(props) {
           </TableRow>
           <TableRow>
             <CustomTableCell colSpan={2}>Total a cobrar</CustomTableCell>
-            <CustomTableCell align="left">{ccyFormat(pvpSubtotal)}</CustomTableCell>
+            <CustomTableCell align="left">{ccyFormat(pvpSubtotal - stockProducts)}</CustomTableCell>
           </TableRow>
           <TableRow>
             <CustomTableCell colSpan={2}>Ganancia potencial</CustomTableCell>
-            <CustomTableCell align="left">{ccyFormat(pvpSubtotal - invoiceTotal)}</CustomTableCell>
+            <CustomTableCell align="left">{ccyFormat(pvpSubtotal - stockProducts - invoiceTotal)}</CustomTableCell>
           </TableRow>
         </TableBody>
       </Table>
