@@ -55,7 +55,7 @@ function Details(props) {
   //const {adminCharges, anfCharges, taxRate} = this.props;
   return <>
       <TableRow>
-        <CustomTableCell rowSpan={5} colSpan={1}>Detalles</CustomTableCell>
+        <CustomTableCell rowSpan={5} colSpan={2}>Detalles</CustomTableCell>
         <CustomTableCell rowSpan={2} colSpan={1}>Descuentos</CustomTableCell>
         <CustomTableCell>Descuento Just</CustomTableCell>
         <CustomTableCell align="left">{`${justDiscountPercent} %`}</CustomTableCell>
@@ -115,7 +115,7 @@ function SpanningTable(props) {
         </TableHead>
         <TableBody>
           {rows.map((row, index) => (
-            <TableRow key={`${row._id}-${index}`}>
+            <TableRow key={`${row.productId}-${row.price}-${index}`}>
               <CustomTableCell>
                 <IconButton
                   onClick={(e) => onTableChange('remove', index, {})}
@@ -144,7 +144,7 @@ function SpanningTable(props) {
             </TableRow>
           ))}
           <TableRow>
-            <CustomTableCell colSpan={2}/>
+            <CustomTableCell colSpan={3}/>
             <CustomTableCell>Subtotal PvP</CustomTableCell>
             <CustomTableCell/>
             <CustomTableCell align="left">{ccyFormat(pvpSubtotal)}</CustomTableCell>
@@ -158,7 +158,7 @@ function SpanningTable(props) {
             ></Details> : null}
 
           <TableRow>
-            <CustomTableCell rowSpan={3} colSpan={2}>Resumen</CustomTableCell>
+            <CustomTableCell rowSpan={3} colSpan={3}>Resumen</CustomTableCell>
             <CustomTableCell colSpan={2}>Total a pagar</CustomTableCell>
             <CustomTableCell align="left">{ccyFormat(invoiceTotal)}</CustomTableCell>
           </TableRow>
