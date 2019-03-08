@@ -37,7 +37,7 @@ class ProductImageGrid extends React.Component {
     const { classes, productList} = this.props;
     return (
       <div className={classes.root}>
-        <TextField label="Filtrar" onChange={(e) => this.setState({products: productList.filter((p) => p.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1)})}></TextField>
+        <TextField fullWidth label="Filtrar" onChange={(e) => this.setState({products: productList.filter((p) => p.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1)})}></TextField>
         <GridList cellHeight={400} className={classes.gridList} cols={3}>
           {this.state.products.map(product => (
             <GridListTile key={product.code} cols={product.cols || 1}>
