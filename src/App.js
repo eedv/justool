@@ -1,5 +1,5 @@
 import React from 'react';
-import CustomTable from './CustomTable';
+import { HashRouter as Router, Route } from "react-router-dom"
 import AppBar from '@material-ui/core/AppBar';
 import DrawerToolbar from './DrawerToolbar';
 import Drawer from '@material-ui/core/Drawer';
@@ -10,11 +10,11 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import Autocomplete from './Autocomplete';
 
-import LocalStorage from './LocalStorage';
 import Utils from './Utils';
-
+import ProductImageGrid from './routes/ProductImageGrid'
+import OrderEditor from './routes/OrderEditor';
+import { Button } from '@material-ui/core';
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -59,7 +59,8 @@ class App extends React.Component {
       min30Percent: 2800,
       anfCharges: 0,
       adminCharges: 121,
-      showDetails: false
+      showDetails: false,
+      taxRate: 6
     }
   };
 
@@ -73,31 +74,11 @@ class App extends React.Component {
     this.setState({configs: config});
   }
 
-  handleTableChange = (actionType, rowIndex, rowData) => {
-    const order = this.state.order.slice();
-    if(actionType === 'add') {
-      const product = this.state.productList.find((prod) => prod.name === rowData.name);
-      product.qty = 1;
-      product.isStock = false;
-      order.push(product);
-    }
-    else if(actionType === 'edit') {
-      Object.assign(order[rowIndex], rowData);
-    }
-    else if(actionType === 'remove') {
-      order.splice(rowIndex, 1);
-    }
-    this.setState({order});
-    LocalStorage.set('default', order)
-  }
-
   componentDidMount() {
-    this.setState({order: LocalStorage.get('default')});
-    let period = Utils.getMonth();
-    let week = Utils.getWeek();
-    fetch(`https://justoolapi.herokuapp.com/products?period=${period}&week=${week}`).then((res) => {
+    fetch(`https://justoolapi.herokuapp.com/products`).then((res) => {
       return res.json()
     }).then((period) => {
+      console.log(period)
       this.setState({productList: period.products});
     })
   }
@@ -149,22 +130,14 @@ class App extends React.Component {
           </Hidden>
         </nav>
         <main className={classes.content}>
-          <div className={classes.toolbar} />
-          <Autocomplete
-            suggestions={this.state.productList}
-            labelValue="name"
-            onChange={(name) => this.handleTableChange('add', null, {name})}
-          ></Autocomplete>
-          <CustomTable
-            rows={this.state.order}
-            onTableChange={this.handleTableChange}
-            min25Percent={this.state.configs.min25Percent}
-            min30Percent={this.state.configs.min30Percent}
-            anfCharges={this.state.configs.anfCharges}
-            adminCharges={this.state.configs.adminCharges}
-            showDetails={this.state.configs.showDetails}
-            taxRate={6}
-          />
+          <div className={classes.toolbar} ></div>
+          <Router>
+            <div>
+                <Route path="/pedido" exact render={() => <OrderEditor productList={this.state.productList} {...this.state.configs}/>}/>
+                <Route path="/" exact render={() => <ProductImageGrid productList={this.state.productList}></ProductImageGrid>}/>
+            </div>
+          </Router>
+
         </main>
       </div>
     );

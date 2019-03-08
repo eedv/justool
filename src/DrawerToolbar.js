@@ -1,4 +1,5 @@
 import React from 'react';
+import { HashRouter as Router, Link } from "react-router-dom";
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -15,7 +16,8 @@ const DrawerToolbar = (props) => {
 		{name: 'anfCharges', type: 'textfield', label: 'Cargo por anfitriona'},
 		{name: 'adminCharges', type: 'textfield', label: 'Gastos administrativos'},
 		{name: 'showDetails', type: 'switch', label: 'Mostrar detalles de factura'},
-		{name: 'showProductList', type: 'button', label: 'Mostrar lista de precios'}
+		{name: 'showProductList', type: 'button', label: 'Mostrar lista de precios', route: ''},
+		{name: 'showCurrentOrder', type: 'button', label: 'Mostrar pedido', route: 'pedido'}
 	  ]
 	const MultiItem = (props) => {
 		let item;
@@ -47,8 +49,7 @@ const DrawerToolbar = (props) => {
 			)
 		}
 		else if(props.type === 'button') {
-			item = <ListItem button><ListItemText primary={props.label} /></ListItem>
-
+			item = <ListItem button component={Link} to={props.route} ><ListItemText primary={props.label} /></ListItem>
 		}
 		return item;
 	}
@@ -56,11 +57,14 @@ const DrawerToolbar = (props) => {
 		<div>
 			<div className={classes.toolbar} />
 			<Divider />
-			<List>
-				{drawerConfig.map((config, index) => (
-					<MultiItem key={index} {...config}></MultiItem>
-				))}
-			</List>
+			<Router>
+				<List>
+					{drawerConfig.map((config, index) => (
+						<MultiItem key={index} {...config}></MultiItem>
+					))}
+				</List>
+			</Router>
+
 
 		</div>
 	);

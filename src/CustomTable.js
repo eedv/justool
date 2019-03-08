@@ -47,7 +47,6 @@ function calculatePaidPrice(rows, justDiscountPercent) {
     row.paidPrice = (row.pvp * ((100 - justDiscountPercent) / 100)) / 1.105;
     return row;
   })
-  //return items.reduce((sum, row) => !row.isStock ? sum + (row.price * row.qty) : sum, 0);
 }
 
 function calculatePvP(rows) {
@@ -55,7 +54,6 @@ function calculatePvP(rows) {
     row.pvp = row.price * row.qty;
     return row;
   })
-  //return items.reduce((sum, row) => !row.isStock ? sum + (row.price * row.qty) : sum, 0);
 }
 
 function getSum(rows, field) {
@@ -64,7 +62,7 @@ function getSum(rows, field) {
 
 function Details(props) {
   const {justDiscountPercent, justDiscount, invoiceTaxes, adminCharges, anfCharges, taxRate} = props;
-  //const {adminCharges, anfCharges, taxRate} = this.props;
+
   return <>
       <TableRow>
         <CustomTableCell rowSpan={4} colSpan={2}>Detalles</CustomTableCell>
@@ -102,7 +100,7 @@ function SpanningTable(props) {
 
   const justDiscountAmmount = (pvpTotal * justDiscountPercent) / 100;
 
-  const stockPaidPrice = getSum(paidPrice.filter(row => row.isStock), 'paidPrice');
+  //const stockPaidPrice = getSum(paidPrice.filter(row => row.isStock), 'paidPrice');
   const stockPvP = getSum(pvpSubtotals.filter(row => row.isStock), 'pvp');
   const invoiceSubtotal = getSum(paidPrice, 'paidPrice') + anfCharges + adminCharges;
 
