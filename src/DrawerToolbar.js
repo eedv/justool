@@ -3,6 +3,7 @@ import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import FormControlLabel from '@material-ui/core/FormControlLabel'
+import ListItemText from '@material-ui/core/ListItemText';
 import FormGroup from '@material-ui/core/FormGroup';
 import TextField from '@material-ui/core/TextField'
 import { Switch } from '@material-ui/core';
@@ -13,30 +14,41 @@ const DrawerToolbar = (props) => {
 		{name: 'min30Percent', type: 'textfield', label: 'Min 30%'},
 		{name: 'anfCharges', type: 'textfield', label: 'Cargo por anfitriona'},
 		{name: 'adminCharges', type: 'textfield', label: 'Gastos administrativos'},
-		{name: 'showDetails', type: 'switch', label: 'Mostrar detalles de factura'}
+		{name: 'showDetails', type: 'switch', label: 'Mostrar detalles de factura'},
+		{name: 'showProductList', type: 'button', label: 'Mostrar lista de precios'}
 	  ]
-	const getItem = (config) => {
+	const MultiItem = (props) => {
 		let item;
-		if(config.type === 'textfield') {
-			item = (<TextField
-				type="number"
-				label={config.label}
-				value={configValues[config.name]}
-				onChange={(e) => onInputChange(config.name, e.target.value)}
-			/>)
-		}
-		else if(config.type === 'switch') {
+		if(props.type === 'textfield') {
 			item = (
-				<FormGroup >
-					<FormControlLabel
-						checked={configValues[config.name]}
-						onChange={(e) => onInputChange('showDetails', e.target.checked)}
-						control={<Switch></Switch>}
-						label="Mostrar detalles"
-					>
-					</FormControlLabel>
-				</FormGroup>
+				<ListItem>
+					<TextField
+						type="number"
+						label={props.label}
+						value={configValues[props.name]}
+						onChange={(e) => onInputChange(props.name, e.target.value)}
+					/>
+				</ListItem>
 			)
+		}
+		else if(props.type === 'switch') {
+			item = (
+				<ListItem>
+					<FormGroup >
+						<FormControlLabel
+							checked={configValues[props.name]}
+							onChange={(e) => onInputChange('showDetails', e.target.checked)}
+							control={<Switch></Switch>}
+							label="Mostrar detalles"
+						>
+						</FormControlLabel>
+					</FormGroup>
+				</ListItem>
+			)
+		}
+		else if(props.type === 'button') {
+			item = <ListItem button><ListItemText primary={props.label} /></ListItem>
+
 		}
 		return item;
 	}
@@ -46,9 +58,7 @@ const DrawerToolbar = (props) => {
 			<Divider />
 			<List>
 				{drawerConfig.map((config, index) => (
-					<ListItem key={index}>
-						{getItem(config)}
-					</ListItem>
+					<MultiItem key={index} {...config}></MultiItem>
 				))}
 			</List>
 
