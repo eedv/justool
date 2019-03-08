@@ -78,7 +78,6 @@ class App extends React.Component {
     fetch(`https://justoolapi.herokuapp.com/products`).then((res) => {
       return res.json()
     }).then((period) => {
-      console.log(period)
       this.setState({productList: period.products});
     })
   }
