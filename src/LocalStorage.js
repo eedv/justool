@@ -5,7 +5,7 @@ export default {
 	},
 	get(key) {
 		let data = window.localStorage.getItem(key);
-		return typeof data == 'string' ? JSON.parse(data) : [];
+		return typeof data == 'string' ? JSON.parse(data) : null;
 	},
 	clear() {
 		window.localStorage.clear();

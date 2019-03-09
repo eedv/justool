@@ -7,14 +7,14 @@ import GridListTileBar from '@material-ui/core/GridListTileBar';
 import IconButton from '@material-ui/core/IconButton';
 import InfoIcon from '@material-ui/icons/Info';
 import TextField from '@material-ui/core/TextField';
+import { Paper } from '@material-ui/core';
 
 const styles = theme => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
-    overflow: 'hidden',
-    backgroundColor: theme.palette.background.paper,
+    overflow: 'hidden'
   },
   gridList: {
     width: '70%',
@@ -38,7 +38,8 @@ class ProductImageGrid extends React.Component {
     return (
       <div className={classes.root}>
         <TextField fullWidth label="Filtrar" onChange={(e) => this.setState({products: productList.filter((p) => p.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1)})}></TextField>
-        <GridList cellHeight={400} className={classes.gridList} cols={3}>
+        <Paper className={classes.gridList}>
+        <GridList cellHeight={400}  cols={3}>
           {this.state.products.map(product => (
             <GridListTile key={product.code} cols={product.cols || 1}>
               <img src={product.image} alt={product.name} />
@@ -60,6 +61,7 @@ class ProductImageGrid extends React.Component {
           ))}
 
         </GridList>
+        </Paper>
       </div>
     );
   }

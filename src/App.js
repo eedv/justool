@@ -14,7 +14,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Utils from './Utils';
 import ProductImageGrid from './routes/ProductImageGrid'
 import OrderEditor from './routes/OrderEditor';
-import { Button } from '@material-ui/core';
+import ConfigEditor from './routes/ConfigEditor';
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -68,12 +68,6 @@ class App extends React.Component {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
 
-  handleConfigChanges = (name, value) => {
-    value = typeof value == 'string' ? Number(value) : value;
-    let config = Object.assign({}, this.state.configs, {[name]:value})
-    this.setState({configs: config});
-  }
-
   componentDidMount() {
     fetch(`https://justoolapi.herokuapp.com/products`).then((res) => {
       return res.json()
@@ -113,7 +107,7 @@ class App extends React.Component {
               onClose={this.handleDrawerToggle}
               classes={{paper: classes.drawerPaper}}
             >
-              <DrawerToolbar configValues={this.state.configs} classes={classes} onInputChange={this.handleConfigChanges}/>
+              <DrawerToolbar configValues={this.state.configs} classes={classes}/>
             </Drawer>
           </Hidden>
           <Hidden smDown implementation="css">
@@ -124,7 +118,7 @@ class App extends React.Component {
               variant="permanent"
               open
             >
-              <DrawerToolbar configValues={this.state.configs} classes={classes} onInputChange={this.handleConfigChanges}/>
+              <DrawerToolbar configValues={this.state.configs} classes={classes} />
             </Drawer>
           </Hidden>
         </nav>
@@ -134,6 +128,7 @@ class App extends React.Component {
             <div>
                 <Route path="/pedido" exact render={() => <OrderEditor productList={this.state.productList} {...this.state.configs}/>}/>
                 <Route path="/" exact render={() => <ProductImageGrid productList={this.state.productList}></ProductImageGrid>}/>
+                <Route path="/config" exact render={() => <ConfigEditor ></ConfigEditor>}/>
             </div>
           </Router>
 

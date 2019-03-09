@@ -3,17 +3,16 @@ import React from 'react';
 import CustomTable from '../CustomTable';
 import Autocomplete from '../Autocomplete';
 import LocalStorage from '../LocalStorage';
-
+import { Switch, FormGroup, FormControlLabel} from '@material-ui/core';
 class OrderEditor extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			order: []
+			order: LocalStorage.get('default') || [],
+			showDetails: false
 		}
 	}
-	componentDidMount() {
-		this.setState({order: LocalStorage.get('default')});
-	}
+
 	handleTableChange = (actionType, rowIndex, rowData) => {
 		const {productList} = this.props;
 		const order = this.state.order.slice();
@@ -33,7 +32,7 @@ class OrderEditor extends React.Component {
 		LocalStorage.set('default', order)
 	}
 	render() {
-		const { productList, min25Percent, min30Percent, anfCharges, adminCharges, showDetails, taxRate} = this.props;
+		const { productList, min25Percent, min30Percent, anfCharges, adminCharges, taxRate} = this.props;
 
 		return (
 			<React.Fragment>
@@ -49,9 +48,18 @@ class OrderEditor extends React.Component {
 					min30Percent={min30Percent}
 					anfCharges={anfCharges}
 					adminCharges={adminCharges}
-					showDetails={showDetails}
+					showDetails={this.state.showDetails}
 					taxRate={taxRate}
 				/>
+				<FormGroup >
+					<FormControlLabel
+						checked={this.state.showDetails}
+						onChange={(e) => this.setState({showDetails: e.target.checked})}
+						control={<Switch></Switch>}
+						label="Mostrar detalles"
+					>
+					</FormControlLabel>
+				</FormGroup>
 			</React.Fragment>
 		);
 	}

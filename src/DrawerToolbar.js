@@ -3,22 +3,19 @@ import { HashRouter as Router, Link } from "react-router-dom";
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import FormControlLabel from '@material-ui/core/FormControlLabel'
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 import FormGroup from '@material-ui/core/FormGroup';
-import TextField from '@material-ui/core/TextField'
-import { Switch } from '@material-ui/core';
+import { Switch, TextField } from '@material-ui/core';
+import { Settings as Settingsicon, ViewList as ListIcon, Assignment as OrderIcon} from '@material-ui/icons'
 const DrawerToolbar = (props) => {
 	const {classes, configValues, onInputChange} = props;
 	const drawerConfig = [
-		{name: 'min25Percent', type: 'textfield', label: 'Min 25%'},
-		{name: 'min30Percent', type: 'textfield', label: 'Min 30%'},
-		{name: 'anfCharges', type: 'textfield', label: 'Cargo por anfitriona'},
-		{name: 'adminCharges', type: 'textfield', label: 'Gastos administrativos'},
-		{name: 'showDetails', type: 'switch', label: 'Mostrar detalles de factura'},
-		{name: 'showProductList', type: 'button', label: 'Mostrar lista de precios', route: ''},
-		{name: 'showCurrentOrder', type: 'button', label: 'Mostrar pedido', route: 'pedido'}
-	  ]
+		{name: 'showProductList', type: 'button', label: 'Lista de precios', icon: ListIcon ,route: ''},
+		{name: 'showCurrentOrder', type: 'button', label: 'Pedido', icon: OrderIcon, route: 'pedido'},
+		{name: 'showConfigEditor', type: 'button', label: 'Configuraciòn', icon: Settingsicon , route: 'config'}
+	]
 	const MultiItem = (props) => {
 		let item;
 		if(props.type === 'textfield') {
@@ -49,7 +46,12 @@ const DrawerToolbar = (props) => {
 			)
 		}
 		else if(props.type === 'button') {
-			item = <ListItem button component={Link} to={props.route} ><ListItemText primary={props.label} /></ListItem>
+			item = (
+				<ListItem button component={Link} to={props.route} >
+					{props.icon ? (<ListItemIcon><props.icon /></ListItemIcon>) : null}
+					<ListItemText primary={props.label} />
+				</ListItem>
+			)
 		}
 		return item;
 	}
