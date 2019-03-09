@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
 import Utils from './Utils';
-import ProductImageGrid from './routes/ProductImageGrid'
+import ProductList from './routes/ProductList'
 import OrderEditor from './routes/OrderEditor';
 import ConfigEditor from './routes/ConfigEditor';
 const drawerWidth = 240;
@@ -127,7 +127,7 @@ class App extends React.Component {
           <Router>
             <div>
                 <Route path="/pedido" exact render={() => <OrderEditor productList={this.state.productList} {...this.state.configs}/>}/>
-                <Route path="/" exact render={() => <ProductImageGrid productList={this.state.productList}></ProductImageGrid>}/>
+                <Route path="/" exact render={() => <ProductList productList={this.state.productList}></ProductList>}/>
                 <Route path="/config" exact render={() => <ConfigEditor ></ConfigEditor>}/>
             </div>
           </Router>
