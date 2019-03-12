@@ -62,10 +62,12 @@ class Autocomplete extends React.Component {
 		highlightedIndex,
 		selectedItem
 	  }) {
-		const {labelValue} = this.props;
+		const {labelValue, textTemplate} = this.props;
 		const isHighlighted = highlightedIndex === index;
 		const isSelected = (selectedItem || "").indexOf(suggestion[labelValue]) > -1;
-
+		const suggestionText = (textTemplate
+			? textTemplate.replace(/%{(.+?)}/gi, (match, group) => suggestion[group] || '')
+			: suggestion[labelValue]).trim();
 		return (
 		  <MenuItem
 			{...itemProps}
@@ -76,7 +78,7 @@ class Autocomplete extends React.Component {
 			  fontWeight: isSelected ? 500 : 400
 			}}
 		  >
-			{suggestion[labelValue]}
+			{suggestionText}
 		  </MenuItem>
 		);
 	}

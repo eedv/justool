@@ -39,6 +39,7 @@ class OrderEditor extends React.Component {
 				<Autocomplete
 					suggestions={productList}
 					labelValue="name"
+					textTemplate="%{name} - %{size}"
 					onChange={(name) => this.handleTableChange('add', null, {name})}
 				></Autocomplete>
 				<CustomTable
