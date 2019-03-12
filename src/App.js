@@ -5,6 +5,8 @@ import DrawerToolbar from './DrawerToolbar';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -26,6 +28,13 @@ const styles = theme => ({
       width: drawerWidth,
       flexShrink: 0,
     },
+  },
+  drawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '0 8px',
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-end',
   },
   appBar: {
     marginLeft: drawerWidth,
@@ -99,7 +108,13 @@ class App extends React.Component {
               onClose={this.handleDrawerToggle}
               classes={{paper: classes.drawerPaper}}
             >
-              <DrawerToolbar configValues={this.state.configs} classes={classes}/>
+              <div className={classes.drawerHeader}>
+                <IconButton onClick={this.handleDrawerToggle}>
+                  {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                </IconButton>
+              </div>
+
+              <DrawerToolbar classes={classes}/>
             </Drawer>
           </Hidden>
           <Hidden smDown implementation="css">
@@ -110,6 +125,7 @@ class App extends React.Component {
               variant="permanent"
               open
             >
+              <div className={classes.toolbar} />
               <DrawerToolbar classes={classes} />
             </Drawer>
           </Hidden>

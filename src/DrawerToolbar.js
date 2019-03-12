@@ -10,7 +10,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import { Switch, TextField } from '@material-ui/core';
 import { Settings as Settingsicon, ViewList as ListIcon, Assignment as OrderIcon} from '@material-ui/icons'
 const DrawerToolbar = (props) => {
-	const {classes, configValues, onInputChange} = props;
+	const {configValues, onInputChange} = props;
 	const drawerConfig = [
 		{name: 'showProductList', type: 'button', label: 'Lista de precios', icon: ListIcon ,route: ''},
 		{name: 'showCurrentOrder', type: 'button', label: 'Pedido', icon: OrderIcon, route: 'pedido'},
@@ -57,7 +57,6 @@ const DrawerToolbar = (props) => {
 	}
 	return (
 		<div>
-			<div className={classes.toolbar} />
 			<Divider />
 			<Router>
 				<List>
