@@ -4,6 +4,7 @@ import CustomTable from '../CustomTable';
 import Autocomplete from '../Autocomplete';
 import LocalStorage from '../LocalStorage';
 import { Switch, FormGroup, FormControlLabel} from '@material-ui/core';
+
 class OrderEditor extends React.Component {
 	constructor(props) {
 		super(props);
@@ -12,7 +13,7 @@ class OrderEditor extends React.Component {
 			showDetails: false
 		}
 	}
-
+	config = LocalStorage.get('AppConfig');
 	handleTableChange = (actionType, rowIndex, rowData) => {
 		const {productList} = this.props;
 		const order = this.state.order.slice();
@@ -32,7 +33,7 @@ class OrderEditor extends React.Component {
 		LocalStorage.set('default', order)
 	}
 	render() {
-		const { productList, min25Percent, min30Percent, anfCharges, adminCharges, taxRate} = this.props;
+		const { productList} = this.props;
 
 		return (
 			<React.Fragment>
@@ -45,12 +46,12 @@ class OrderEditor extends React.Component {
 				<CustomTable
 					rows={this.state.order}
 					onTableChange={this.handleTableChange}
-					min25Percent={min25Percent}
-					min30Percent={min30Percent}
-					anfCharges={anfCharges}
-					adminCharges={adminCharges}
+					min25Percent={this.config.min25Percent}
+					min30Percent={this.config.min30Percent}
+					anfCharges={this.config.anfCharges}
+					adminCharges={this.config.adminCharges}
 					showDetails={this.state.showDetails}
-					taxRate={taxRate}
+					taxrate={this.config.taxrate}
 				/>
 				<FormGroup >
 					<FormControlLabel

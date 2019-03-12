@@ -61,7 +61,7 @@ function getSum(rows, field) {
 }
 
 function Details(props) {
-  const {justDiscountPercent, justDiscount, invoiceTaxes, adminCharges, anfCharges, taxRate} = props;
+  const {justDiscountPercent, justDiscount, invoiceTaxes, adminCharges, anfCharges, taxrate} = props;
 
   return <>
       <TableRow>
@@ -84,14 +84,14 @@ function Details(props) {
       </TableRow>
       <TableRow>
         <CustomTableCell>IIBB Provincial</CustomTableCell>
-        <CustomTableCell align="left">{`${(taxRate).toFixed(0)} %`}</CustomTableCell>
+        <CustomTableCell align="left">{`${(taxrate).toFixed(0)} %`}</CustomTableCell>
         <CustomTableCell align="left">{ccyFormat(invoiceTaxes)}</CustomTableCell>
       </TableRow>
   </>
 }
 
 function SpanningTable(props) {
-  const { classes, rows, taxRate, anfCharges = 0, adminCharges, onTableChange, min25Percent, min30Percent, showDetails} = props;
+  const { classes, rows, taxrate, anfCharges = 0, adminCharges, onTableChange, min25Percent, min30Percent, showDetails} = props;
   const pvpSubtotals = calculatePvP(rows);
   const pvpTotal = getSum(pvpSubtotals, 'pvp');
   const justDiscountPercent = pvpTotal >= min30Percent ? 30 : pvpTotal >= min25Percent ? 25 : 0;
@@ -104,7 +104,7 @@ function SpanningTable(props) {
   const stockPvP = getSum(pvpSubtotals.filter(row => row.isStock), 'pvp');
   const invoiceSubtotal = getSum(paidPrice, 'paidPrice') + anfCharges + adminCharges;
 
-  const invoiceTaxes = taxRate * invoiceSubtotal / 100;
+  const invoiceTaxes = taxrate * invoiceSubtotal / 100;
 
   const invoiceTotal = invoiceSubtotal + invoiceTaxes;
   return (

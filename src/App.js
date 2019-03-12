@@ -53,15 +53,7 @@ class App extends React.Component {
   state = {
     mobileOpen: false,
     productList: [],
-    order: [],
-    configs: {
-      min25Percent: 1600,
-      min30Percent: 2800,
-      anfCharges: 0,
-      adminCharges: 121,
-      showDetails: false,
-      taxRate: 6
-    }
+    order: []
   };
 
   handleDrawerToggle = () => {
@@ -118,7 +110,7 @@ class App extends React.Component {
               variant="permanent"
               open
             >
-              <DrawerToolbar configValues={this.state.configs} classes={classes} />
+              <DrawerToolbar classes={classes} />
             </Drawer>
           </Hidden>
         </nav>
@@ -126,7 +118,7 @@ class App extends React.Component {
           <div className={classes.toolbar} ></div>
           <Router>
             <div>
-                <Route path="/pedido" exact render={() => <OrderEditor productList={this.state.productList} {...this.state.configs}/>}/>
+                <Route path="/pedido" exact render={() => <OrderEditor productList={this.state.productList}/>}/>
                 <Route path="/" exact render={() => <ProductList productList={this.state.productList}></ProductList>}/>
                 <Route path="/config" exact render={() => <ConfigEditor ></ConfigEditor>}/>
             </div>
