@@ -13,7 +13,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
-import Utils from './Utils';
 import ProductList from './routes/ProductList'
 import OrderEditor from './routes/OrderEditor';
 import ConfigEditor from './routes/ConfigEditor';
