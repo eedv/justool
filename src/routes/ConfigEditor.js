@@ -26,10 +26,9 @@ class ConfigEditor extends React.Component {
 
 	handleConfigChanges = (name, value) => {
 		value = typeof value == 'string' ? Number(value) : value;
-		this.setState({[name]: value})
-		ConfigStore.set(this.state)
-		//let config = Object.assign({}, this.state.configs, {[name]:value})
-		//this.setState({configs: config});
+		this.setState({[name]: value}, () => {
+			return ConfigStore.set(this.state)
+		});
 	}
 
 	getItem = (itemConfig, index) => {
