@@ -69,7 +69,7 @@ class Autocomplete extends React.Component {
 		return (
 		  <MenuItem
 			{...itemProps}
-			key={suggestion[labelValue]}
+			key={`${suggestion[labelValue]}-${index}`}
 			selected={isHighlighted}
 			component="div"
 			style={{
