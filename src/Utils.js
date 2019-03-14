@@ -1,17 +1,19 @@
 export default {
-	getWeek() {
-		var target = new Date();
-		var dayNr = (target.getDay() + 6) % 7;
-		target.setDate(target.getDate() - dayNr + 3);
-		var firstThursday = target.valueOf();
-		target.setMonth(0, 1);
-		if(target.getDay() !== 4) {
-			target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);
-		}
-		return 1 + Math.ceil((firstThursday - target) / 604800000);
+	getWeek(d = new Date()) {
+		// Copy date so don't modify original
+		d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+		// Set to nearest Thursday: current date + 4 - current day number
+		// Make Sunday's day number 7
+		d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+		// Get first day of year
+		var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+		// Calculate full weeks to nearest Thursday
+		var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+		// Return array of year and week number
+		return weekNo;
 
 	},
-	getMonth() {
-		return new Date().getMonth() + 1;
+	getFourWeekMonth() {
+		return Math.ceil(this.getWeek() / 4);
 	}
 }
