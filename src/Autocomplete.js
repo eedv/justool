@@ -89,7 +89,7 @@ class Autocomplete extends React.Component {
 		const {suggestions, labelValue} = this.props;
 		let count = 0;
 
-		return inputLength === 0
+		return inputLength <= 3
 		  ? []
 		  : suggestions.filter(suggestion => {
 			  const keep =

@@ -41,11 +41,18 @@ class ProductList extends React.Component {
     }
   }
 
+  filterProducts(filterTerm, productList) {
+    if(filterTerm.length >= 3) {
+      let products = productList.filter((p) => p.name.toLowerCase().indexOf(filterTerm.toLowerCase()) !== -1);
+      this.setState({products});
+    }
+  }
+
   render() {
     const { classes, productList} = this.props;
     return (
       <div className={classes.root}>
-        <TextField fullWidth label="Filtrar" onChange={(e) => this.setState({products: productList.filter((p) => p.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1)})}></TextField>
+        <TextField fullWidth label="Filtrar" onChange={(e) => this.filterProducts(e.target.value, productList)}></TextField>
         <Paper className={classes.gridList}>
         <List className={classes.root}>
 
