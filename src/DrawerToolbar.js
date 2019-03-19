@@ -12,9 +12,9 @@ import { Settings as Settingsicon, ViewList as ListIcon, Assignment as OrderIcon
 const DrawerToolbar = (props) => {
 	const {configValues, onInputChange} = props;
 	const drawerConfig = [
-		{name: 'showProductList', type: 'button', label: 'Lista de precios', icon: ListIcon ,route: ''},
-		{name: 'showCurrentOrder', type: 'button', label: 'Pedido', icon: OrderIcon, route: 'pedido'},
-		{name: 'showConfigEditor', type: 'button', label: 'Configuraciòn', icon: Settingsicon , route: 'config'}
+		{name: 'showProductList', type: 'button', label: 'Lista de precios', icon: ListIcon ,route: '/'},
+		{name: 'showOrderList', type: 'button', label: 'Pedidos', icon: OrderIcon, route: '/pedidos'},
+		{name: 'showConfigEditor', type: 'button', label: 'Configuraciòn', icon: Settingsicon , route: '/config'}
 	]
 	const MultiItem = (props) => {
 		let item;
@@ -65,8 +65,6 @@ const DrawerToolbar = (props) => {
 					))}
 				</List>
 			</Router>
-
-
 		</div>
 	);
 }

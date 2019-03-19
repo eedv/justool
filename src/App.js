@@ -15,7 +15,9 @@ import { withStyles } from '@material-ui/core/styles';
 
 import ProductList from './routes/ProductList'
 import OrderEditor from './routes/OrderEditor';
+import OrderList from './routes/OrderList';
 import ConfigEditor from './routes/ConfigEditor';
+
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -60,7 +62,7 @@ const styles = theme => ({
 class App extends React.Component {
   state = {
     mobileOpen: false,
-    productList: [],
+    period: {},
     order: []
   };
 
@@ -72,7 +74,7 @@ class App extends React.Component {
     fetch(`https://justoolapi.herokuapp.com/products`).then((res) => {
       return res.json()
     }).then((period) => {
-      this.setState({productList: period.products});
+      this.setState({period});
     })
   }
 
@@ -133,9 +135,10 @@ class App extends React.Component {
           <div className={classes.toolbar} ></div>
           <Router>
             <div>
-                <Route path="/pedido" exact render={() => <OrderEditor productList={this.state.productList}/>}/>
-                <Route path="/" exact render={() => <ProductList productList={this.state.productList}></ProductList>}/>
-                <Route path="/config" exact render={() => <ConfigEditor ></ConfigEditor>}/>
+                <Route path="/pedidos/:year/:period/:week" exact component={OrderEditor}/>
+                <Route path="/" exact render={() => <ProductList productList={this.state.period.products}></ProductList>}/>
+                <Route path="/config" exact component={ConfigEditor}/>
+                <Route path="/pedidos" exact component={OrderList}/>
             </div>
           </Router>
 
