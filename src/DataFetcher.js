@@ -26,7 +26,7 @@ export default {
 	},
 	async getOrders() {
 		return await fetch(`${baseApi}/orders`).then((res) => {
-		  return res.json();
+			return res.json();
 		})
 	},
 

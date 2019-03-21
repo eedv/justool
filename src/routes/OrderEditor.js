@@ -29,10 +29,10 @@ class OrderEditor extends React.Component {
 		  products.push(product);
 		}
 		else if(actionType === 'edit') {
-		  Object.assign(products[rowIndex], rowData);
+			Object.assign(products[rowIndex], rowData);
 		}
 		else if(actionType === 'remove') {
-		  products.splice(rowIndex, 1);
+			products.splice(rowIndex, 1);
 		}
 		this.setState({products}, () => {
 			DataFetcher.saveOrder(this.state);
