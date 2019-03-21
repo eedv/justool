@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import { Link, Redirect} from "react-router-dom";
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button'
 import List from '@material-ui/core/List';
@@ -18,7 +18,9 @@ class OrderList extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-		  orders: []
+			orders: [],
+			orderCreated: {},
+			error: ''
 		}
 	}
 
@@ -29,27 +31,39 @@ class OrderList extends React.Component {
 	}
 
 	createOrder() {
-		return DataFetcher.createOrder();
+		DataFetcher.createOrder()
+			.then((order) => {
+				return this.setState({
+					orderCreated: order
+				})
+			})
+
 	}
 
 	render() {
 		const {classes, match} = this.props;
-		return (
-			<>
-				<Button variant="contained" color="default" onClick={this.createOrder}>Nuevo pedido</Button>
-				<List className={classes.root}>
+		if(this.state.orderCreated.year) {
+			const {year, period, week} = this.state.orderCreated;
+			return <Redirect to={`/pedidos/${year}/${period}/${week}`}></Redirect>
+		}
+		else {
+			return (
+				<>
+					<Button variant="contained" color="default" onClick={() => this.createOrder()}>Nuevo pedido</Button>
+					<List className={classes.root}>
 
-					{this.state.orders.map(order => (
-						<ListItem button component={Link} to={`${match.url}/${order.year}/${order.period}/${order.week}`} key={order.periodWeek} alignItems="flex-start">
-						<ListItemText
-							primary={`Perìodo ${order.period}, semana ${order.week}`}
+						{this.state.orders.map(order => (
+							<ListItem button component={Link} to={`${match.url}/${order.year}/${order.period}/${order.week}`} key={order.periodWeek} alignItems="flex-start">
+							<ListItemText
+								primary={`Perìodo ${order.period}, semana ${order.week}`}
 
-						/>
-						</ListItem>
-					))}
-				</List>
-			</>
-		)
+							/>
+							</ListItem>
+						))}
+					</List>
+				</>
+			)
+		}
 	}
 }
 
