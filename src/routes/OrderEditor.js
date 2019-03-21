@@ -15,7 +15,7 @@ class OrderEditor extends React.Component {
 			products: [],
 			productList: [],
 			showDetails: false,
-			config: ConfigStore.get('AppConfig') // Default config
+			config: ConfigStore.get('AppConfig') || {} // Default config
 		}
 	}
 
