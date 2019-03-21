@@ -4,6 +4,7 @@ import CustomTable from '../CustomTable';
 import Autocomplete from '../Autocomplete';
 import LocalStorage from '../LocalStorage';
 import ConfigStore from '../ConfigStore';
+import DataFetcher from '../DataFetcher';
 import { Switch, FormGroup, FormControlLabel} from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 
@@ -13,9 +14,9 @@ class OrderEditor extends React.Component {
 		this.state = {
 			products: [],
 			productList: [],
-			showDetails: false
+			showDetails: false,
+			config: ConfigStore.get('AppConfig') // Default config
 		}
-		this.config = ConfigStore.get('AppConfig'); // Default config
 	}
 
 	handleTableChange = (actionType, rowIndex, rowData) => {
@@ -33,49 +34,29 @@ class OrderEditor extends React.Component {
 		else if(actionType === 'remove') {
 		  products.splice(rowIndex, 1);
 		}
-		this.setState({products});
-		let orderData = {
-			products,
-			config: this.config,
-			periodWeek: this.periodWeek
-		}
-		const {year, period, week} = this.props.match.params;
-		fetch(`http://localhost:8501/orders/${year}/${period}/${week}`, {
-			method: 'PATCH', // 'GET', 'PUT', 'DELETE', etc.
-			body: JSON.stringify({ products}),
-			headers: new Headers({
-				'Content-Type': 'application/json'
-			}),
-		})
-		.then(response => response.json());
-		console.log(this.periodWeek)
-		LocalStorage.set(this.periodWeek, orderData)
+		this.setState({products}, () => {
+			DataFetcher.saveOrder(this.state);
+			LocalStorage.set(this.periodWeek, this.state);
+		});
 	}
 
 	componentWillMount() {
-		const {year, period, week} = this.props.match.params;
 
-		fetch(`http://localhost:8501/products?year=${year}&period=${period}&week=${week}`).then((res) => {
-			return res.json()
-		}).then((productData) => {
-			if(productData) {
-				this.setState({productList: productData.products});
-			}
-			else {
-				this.setState({productLlist: null})
-			}
-		})
+		DataFetcher.getProductList(this.props.match.params)
+			.then((productList) => {
+				this.setState({productList});
+			});
 
-		fetch(`http://localhost:8501/orders/${year}/${period}/${week}`).then((res) => {
-			return res.json()
-		}).then((order) => {
-			if(order && order[0]) {
-				this.setState({...order[0]});
-			}
-			else {
-				this.setState({status: 'No se encontró la semana o período'})
-			}
-		})
+		DataFetcher.getOrder(this.props.match.params)
+			.then((order) => {
+				if(order) {
+					this.setState({...order});
+				}
+				else {
+					this.setState({status: 'No se encontró la semana o período'})
+				}
+			})
+
 	}
 
 	showStatus() {
@@ -96,12 +77,12 @@ class OrderEditor extends React.Component {
 			<CustomTable
 				rows={this.state.products}
 				onTableChange={this.handleTableChange}
-				min25Percent={this.config.min25Percent}
-				min30Percent={this.config.min30Percent}
-				anfCharges={this.config.anfCharges}
-				adminCharges={this.config.adminCharges}
+				min25Percent={this.state.config.min25Percent}
+				min30Percent={this.state.config.min30Percent}
+				anfCharges={this.state.config.anfCharges}
+				adminCharges={this.state.config.adminCharges}
 				showDetails={this.state.showDetails}
-				taxrate={this.config.taxrate}
+				taxrate={this.state.config.taxrate}
 			/>
 			<FormGroup >
 				<FormControlLabel

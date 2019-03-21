@@ -8,6 +8,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import TextField from '@material-ui/core/TextField'
 import { Switch } from '@material-ui/core';
 import ConfigStore from '../ConfigStore';
+import DataFetcher from '../DataFetcher';
 
 const config = [
 	{name: 'min25Percent', type: 'textfield', label: 'Min 25%'},
@@ -27,7 +28,8 @@ class ConfigEditor extends React.Component {
 	handleConfigChanges = (name, value) => {
 		value = typeof value == 'string' ? Number(value) : value;
 		this.setState({[name]: value}, () => {
-			return ConfigStore.set(this.state)
+			DataFetcher.saveConfig(this.state);
+			return ConfigStore.set(this.state);
 		});
 	}
 

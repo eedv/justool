@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button'
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-
+import DataFetcher from '../DataFetcher';
 const styles = theme => ({
 	root: {
 	  display: 'flex',
@@ -23,23 +23,14 @@ class OrderList extends React.Component {
 	}
 
 	componentDidMount() {
-		fetch('http://localhost:8501/orders').then((res) => {
-		  return res.json()
-		}).then((orders) => {
+		DataFetcher.getOrders().then((orders) => {
 		  this.setState({orders});
-		})
+		});
 	}
 
 	createOrder() {
-		return fetch('http://localhost:8501/orders', {
-			method: 'POST',
-			body: JSON.stringify(),
-			headers: new Headers({
-				'Content-Type': 'application/json'
-			}),
-		})
-		.then(response => response.json());
-	  }
+		return DataFetcher.createOrder();
+	}
 
 	render() {
 		const {classes, match} = this.props;
