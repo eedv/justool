@@ -29,7 +29,7 @@ const CustomTableCell = withStyles(theme => ({
   },
   body: {
     fontSize: 14,
-    padding: '4px 24px 4px 24px',
+    padding: '4px 10px 4px 10px',
     minWidth: 50
   },
 }))(TableCell);
