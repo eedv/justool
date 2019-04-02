@@ -55,7 +55,7 @@ class OrderList extends React.Component {
 						{this.state.orders.map(order => (
 							<ListItem button component={Link} to={`${match.url}/${order.year}/${order.period}/${order.week}`} key={order.periodWeek} alignItems="flex-start">
 							<ListItemText
-								primary={`Perìodo ${order.period}, semana ${order.week}`}
+								primary={`Perìodo ${order.period}, semana ${order.weekOfPeriod}`}
 
 							/>
 							</ListItem>
