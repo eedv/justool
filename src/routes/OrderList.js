@@ -26,7 +26,7 @@ class OrderList extends React.Component {
 
 	componentDidMount() {
 		DataFetcher.getOrders().then((orders) => {
-		  this.setState({orders});
+		  this.setState({orders: orders.sort((a, b) => b.week - a.week)});
 		});
 	}
 
