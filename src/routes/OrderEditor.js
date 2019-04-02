@@ -15,6 +15,7 @@ class OrderEditor extends React.Component {
 			products: [],
 			productList: [],
 			showDetails: false,
+			notes: '',
 			config: ConfigStore.get('AppConfig') || {} // Default config
 		}
 	}
@@ -38,6 +39,12 @@ class OrderEditor extends React.Component {
 			DataFetcher.saveOrder(this.state);
 			LocalStorage.set(this.periodWeek, this.state);
 		});
+	}
+
+	handleNoteChange = (event) => {
+		this.setState({notes: event.target.value})
+		const {year, period, week} = this.state;
+		DataFetcher.saveOrder(year, period, week, {notes: event.target.value});
 	}
 
 	componentWillMount() {
@@ -92,6 +99,17 @@ class OrderEditor extends React.Component {
 					label="Mostrar detalles"
 				>
 				</FormControlLabel>
+				<TextField
+					id="notas-textarea"
+					label="Notas"
+					placeholder="Notas"
+					multiline
+					rows="10"
+					margin="normal"
+					variant="outlined"
+					value={this.state.notes}
+					onChange={this.handleNoteChange}
+				/>
 			</FormGroup>
 		</React.Fragment>)
 	}
