@@ -2,10 +2,11 @@
 import React from 'react';
 import CustomTable from '../CustomTable';
 import Autocomplete from '../Autocomplete';
+import Autocomplete2 from '../Autocomplete2';
 import LocalStorage from '../LocalStorage';
 import ConfigStore from '../ConfigStore';
 import DataFetcher from '../DataFetcher';
-import { Switch, FormGroup, FormControlLabel} from '@material-ui/core';
+import { Switch, FormGroup, FormControlLabel, TextField} from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 
 class OrderEditor extends React.Component {
@@ -36,7 +37,8 @@ class OrderEditor extends React.Component {
 			products.splice(rowIndex, 1);
 		}
 		this.setState({products}, () => {
-			DataFetcher.saveOrder(this.state);
+			const {year, period, week} = this.state;
+			DataFetcher.saveOrder(year, period, week, {products});
 			LocalStorage.set(this.periodWeek, this.state);
 		});
 	}
@@ -75,12 +77,12 @@ class OrderEditor extends React.Component {
 	showContent() {
 		return (<React.Fragment>
 
-			<Autocomplete
-				suggestions={this.state.productList}
+			<Autocomplete2
+				options={this.state.productList}
 				labelValue="name"
 				textTemplate="%{name} - %{size}"
-				onChange={(name) => this.handleTableChange('add', null, {name})}
-			></Autocomplete>
+				onChange={(item) => this.handleTableChange('add', null, item)}
+			></Autocomplete2>
 			<CustomTable
 				rows={this.state.products}
 				onTableChange={this.handleTableChange}
