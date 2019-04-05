@@ -9,25 +9,34 @@ export default {
 		})
 		.then(response => response.json());
 	},
-	async saveOrder({year, period, week, products}) {
+	async saveOrder(year, period, week, updateData) {
 		return fetch(`${baseApi}/orders/${year}/${period}/${week}`, {
 			method: 'PATCH', // 'GET', 'PUT', 'DELETE', etc.
-			body: JSON.stringify({ products}),
+			body: JSON.stringify(updateData),
 			headers: new Headers({
 				'Content-Type': 'application/json'
 			}),
 		})
 		.then(response => response.json());
 	},
-	async getOrder({year, period, week}) {
-		let response = await fetch(`${baseApi}/orders/${year}/${period}/${week}`)
+	async getOrder(orderId) {
+
+		let response = await fetch(`${baseApi}/orders/${orderId}`);
 		let order = await response.json();
 		return order ? order[0] : null;
 	},
-	async getOrders() {
-		return await fetch(`${baseApi}/orders`).then((res) => {
+	async getOrders(query) {
+		let orderFilter = '';
+		for (const key in query) {
+			if (query.hasOwnProperty(key) && query[key]) {
+				orderFilter += `&${key}=${query[key]}`;
+			}
+		}
+		orderFilter = orderFilter.replace(/&/, '')
+
+		return await fetch(`${baseApi}/orders/?${orderFilter}`).then((res) => {
 			return res.json();
-		})
+		});
 	},
 
 	async getConfig() {
@@ -46,8 +55,8 @@ export default {
 		.then(response => response.json());
 	},
 
-	async getProductList({year, period, week}) {
-		let response = await fetch(`${baseApi}/products?year=${year}&period=${period}&week=${week}`);
+	async getProductList(priceListId) {
+		let response = await fetch(`${baseApi}/products/${priceListId}`);
 		let productList = await response.json();
 		return productList ? productList.products : null;
 	}
