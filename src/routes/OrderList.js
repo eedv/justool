@@ -1,33 +1,54 @@
 import React from 'react';
 import { Link, Redirect} from "react-router-dom";
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button'
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import {Button, Select, MenuItem, List, ListItem, ListItemText, FormControl, InputLabel} from '@material-ui/core'
 import DataFetcher from '../DataFetcher';
+import {uniq} from 'lodash';
 const styles = theme => ({
 	root: {
 	  display: 'flex',
 	  flexWrap: 'wrap',
-	  justifyContent: 'space-around',
 	  overflow: 'hidden'
-	}
-  });
+	},
+	formControl: {
+		margin: theme.spacing.unit,
+		minWidth: 120,
+	},
+	selectEmpty: {
+		marginTop: theme.spacing.unit * 2,
+	},
+});
 class OrderList extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			orders: [],
 			orderCreated: {},
+			periodFilters: [],
+			periodFilterSelected: '',
+			yearFilters: [],
+			yearFilterSelected: '',
 			error: ''
 		}
 	}
 
 	componentDidMount() {
-		DataFetcher.getOrders().then((orders) => {
-		  this.setState({orders: orders.sort((a, b) => b.week - a.week)});
+		DataFetcher.getOrders({}).then((orders) => {
+		  this.setState({
+				yearFilters: uniq(orders.map((period) => period.year)),
+				periodFilters: uniq(orders.map((period) => period.period)),
+				orders: orders.sort((a, b) => b.week - a.week)
+			});
 		});
+	}
+
+	handleFilterSelection = (event) => {
+		this.setState({[`${event.target.name}FilterSelected`]: event.target.value}, () => {
+			DataFetcher.getOrders({year: this.state.yearFilterSelected, period: this.state.periodFilterSelected}).then((orders) => {
+				this.setState({orders});
+			});
+		})
+
 	}
 
 	createOrder() {
@@ -49,7 +70,37 @@ class OrderList extends React.Component {
 		else {
 			return (
 				<>
+				<form  className={classes.root}>
+				<FormControl  className={classes.formControl} >
 					<Button variant="contained" color="default" onClick={() => this.createOrder()}>Nuevo pedido</Button>
+				</FormControl>
+					<FormControl  className={classes.formControl} >
+						<InputLabel htmlFor="year-simple">Año</InputLabel>
+						<Select
+							value={this.state.yearFilterSelected}
+							onChange={this.handleFilterSelection}
+							inputProps={{
+								name: 'year',
+								id: 'year-simple',
+							}}
+						>
+						{this.state.yearFilters.map((filter, index) => <MenuItem key={index} value={filter}>{filter}</MenuItem>)}
+						</Select>
+					</FormControl>
+					<FormControl  className={classes.formControl} >
+						<InputLabel htmlFor="period-simple">Período</InputLabel>
+						<Select
+							value={this.state.periodFilterSelected}
+							onChange={this.handleFilterSelection}
+							inputProps={{
+								name: 'period',
+								id: 'period-simple',
+							}}
+						>
+						{this.state.periodFilters.map((filter, index) => <MenuItem key={index} value={filter}>{filter}</MenuItem>)}
+						</Select>
+					</FormControl>
+				</form>
 					<List className={classes.root}>
 
 						{this.state.orders.map(order => (
