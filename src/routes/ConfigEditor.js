@@ -21,10 +21,12 @@ class ConfigEditor extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			...(ConfigStore.get() || {min25Percent: 0, min30Percent: 0, anfCharges:0, adminCharges:0, taxrate: 0})
+			min25Percent: 0, min30Percent: 0, anfCharges:0, adminCharges:0, taxrate: 0
 		}
 	}
-
+	componentWillMount() {
+		DataFetcher.getConfig().then((config) => this.setState(config));
+	}
 	handleConfigChanges = (name, value) => {
 		value = typeof value == 'string' ? Number(value) : value;
 		this.setState({[name]: value}, () => {
