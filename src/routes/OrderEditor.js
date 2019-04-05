@@ -51,12 +51,12 @@ class OrderEditor extends React.Component {
 
 	componentWillMount() {
 
-		DataFetcher.getProductList(this.props.match.params)
+		DataFetcher.getProductList(this.props.match.params.orderId)
 			.then((productList) => {
 				this.setState({productList});
 			});
 
-		DataFetcher.getOrder(this.props.match.params)
+		DataFetcher.getOrder(this.props.match.params.orderId)
 			.then((order) => {
 				if(order) {
 					this.setState({...order});

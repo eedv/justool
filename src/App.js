@@ -135,7 +135,7 @@ class App extends React.Component {
           <div className={classes.toolbar} ></div>
           <Router>
             <div>
-                <Route path="/pedidos/:year/:period/:week" exact component={OrderEditor}/>
+                <Route path="/pedidos/:orderId" exact component={OrderEditor}/>
                 <Route path="/" exact render={() => <ProductList productList={this.state.period.products}></ProductList>}/>
                 <Route path="/config" exact component={ConfigEditor}/>
                 <Route path="/pedidos" exact component={OrderList}/>
