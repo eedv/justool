@@ -9,8 +9,8 @@ export default {
 		})
 		.then(response => response.json());
 	},
-	async saveOrder(year, period, week, updateData) {
-		return fetch(`${baseApi}/orders/${year}/${period}/${week}`, {
+	async saveOrder(orderId, updateData) {
+		return fetch(`${baseApi}/orders/${orderId}`, {
 			method: 'PATCH', // 'GET', 'PUT', 'DELETE', etc.
 			body: JSON.stringify(updateData),
 			headers: new Headers({
@@ -20,7 +20,6 @@ export default {
 		.then(response => response.json());
 	},
 	async getOrder(orderId) {
-
 		let response = await fetch(`${baseApi}/orders/${orderId}`);
 		let order = await response.json();
 		return order ? order[0] : null;

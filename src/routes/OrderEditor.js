@@ -37,16 +37,16 @@ class OrderEditor extends React.Component {
 			products.splice(rowIndex, 1);
 		}
 		this.setState({products}, () => {
-			const {year, period, week} = this.state;
-			DataFetcher.saveOrder(year, period, week, {products});
+			const {id} = this.state;
+			DataFetcher.saveOrder(id, {products});
 			LocalStorage.set(this.periodWeek, this.state);
 		});
 	}
 
 	handleNoteChange = (event) => {
 		this.setState({notes: event.target.value})
-		const {year, period, week} = this.state;
-		DataFetcher.saveOrder(year, period, week, {notes: event.target.value});
+		const {id} = this.state;
+		DataFetcher.saveOrder(id, {notes: event.target.value});
 	}
 
 	componentWillMount() {
