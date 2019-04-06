@@ -42,24 +42,6 @@ function priceRow(price, qty) {
   return price * qty;
 }
 
-function calculatePaidPrice(rows, justDiscountPercent) {
-  return rows.map((row) => {
-    row.paidPrice = (row.pvp * ((100 - justDiscountPercent) / 100)) / 1.105;
-    return row;
-  })
-}
-
-function calculatePvP(rows) {
-  return rows.map((row) => {
-    row.pvp = row.price * row.qty;
-    return row;
-  })
-}
-
-function getSum(rows, field) {
-  return rows.reduce((sum, row) => sum + row[field], 0);
-}
-
 function Details(props) {
   const {justDiscountPercent, justDiscount, invoiceTaxes, adminCharges, anfCharges, taxrate} = props;
 
@@ -91,22 +73,9 @@ function Details(props) {
 }
 
 function SpanningTable(props) {
-  const { classes, rows, taxrate, anfCharges = 0, adminCharges, onTableChange, min25Percent, min30Percent, showDetails} = props;
-  const pvpSubtotals = calculatePvP(rows);
-  const pvpTotal = getSum(pvpSubtotals, 'pvp');
-  const justDiscountPercent = pvpTotal >= min30Percent ? 30 : pvpTotal >= min25Percent ? 25 : 0;
+  const { classes, rows, onTableChange, showDetails, config} = props;
 
-  const paidPrice = calculatePaidPrice(pvpSubtotals, justDiscountPercent);
-
-  const justDiscountAmmount = (pvpTotal * justDiscountPercent) / 100;
-
-  //const stockPaidPrice = getSum(paidPrice.filter(row => row.isStock), 'paidPrice');
-  const stockPvP = getSum(pvpSubtotals.filter(row => row.isStock), 'pvp');
-  const invoiceSubtotal = getSum(paidPrice, 'paidPrice') + anfCharges + adminCharges;
-
-  const invoiceTaxes = taxrate * invoiceSubtotal / 100;
-
-  const invoiceTotal = invoiceSubtotal + invoiceTaxes;
+  const {pvpTotal = 0, invoiceTotal = 0, stockPvP = 0, justDiscountPercent = 0, justDiscountAmmount = 0, invoiceTaxes = 0} = props.calculatedData;
   return (
     <Paper className={classes.root}>
       <Table className={classes.table}>
@@ -160,7 +129,7 @@ function SpanningTable(props) {
             justDiscountPercent={justDiscountPercent}
             justDiscount={justDiscountAmmount}
             invoiceTaxes={invoiceTaxes}
-            {...props}
+            {...config}
             ></Details> : null}
 
           <TableRow>

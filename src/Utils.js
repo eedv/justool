@@ -15,5 +15,49 @@ export default {
 	},
 	getFourWeekMonth() {
 		return Math.ceil(this.getWeek() / 4);
+	},
+	calculatePaidPrice(rows, justDiscountPercent) {
+		return rows.map((row) => {
+			row.paidPrice = (row.pvp * ((100 - justDiscountPercent) / 100)) / 1.105;
+			return row;
+		})
+	},
+
+	calculatePvP(rows) {
+		return rows.map((row) => {
+			row.pvp = row.price * row.qty;
+			return row;
+		})
+	},
+
+	getSum(rows, field) {
+		return rows.reduce((sum, row) => sum + row[field], 0);
+	},
+	getDeductionsAndProfit(orderProducts, config) {
+		const {taxrate, anfCharges, adminCharges, min25Percent, min30Percent} = config;
+		const pvpSubtotals = this.calculatePvP(orderProducts);
+		const pvpTotal = this.getSum(pvpSubtotals, 'pvp');
+		const justDiscountPercent = pvpTotal >= min30Percent ? 30 : pvpTotal >= min25Percent ? 25 : 0;
+
+		const paidPrice = this.calculatePaidPrice(pvpSubtotals, justDiscountPercent);
+
+		const justDiscountAmmount = (pvpTotal * justDiscountPercent) / 100;
+
+		//const stockPaidPrice = getSum(paidPrice.filter(row => row.isStock), 'paidPrice');
+		const stockPvP = this.getSum(pvpSubtotals.filter(row => row.isStock), 'pvp');
+		const invoiceSubtotal = this.getSum(paidPrice, 'paidPrice') + anfCharges + adminCharges;
+
+		const invoiceTaxes = taxrate * invoiceSubtotal / 100;
+
+		const invoiceTotal = invoiceSubtotal + invoiceTaxes;
+
+		return {
+			pvpTotal,
+			invoiceTotal,
+			stockPvP,
+			justDiscountPercent,
+			justDiscountAmmount,
+			invoiceTaxes
+		}
 	}
 }

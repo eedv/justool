@@ -8,6 +8,7 @@ import ConfigStore from '../ConfigStore';
 import DataFetcher from '../DataFetcher';
 import { Switch, FormGroup, FormControlLabel, TextField} from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
+import Utils from '../Utils';
 
 class OrderEditor extends React.Component {
 	constructor(props) {
@@ -17,7 +18,8 @@ class OrderEditor extends React.Component {
 			productList: [],
 			showDetails: false,
 			notes: '',
-			config: ConfigStore.get('AppConfig') || {} // Default config
+			config: ConfigStore.get('AppConfig') || {}, // Default config,
+			calculatedData: {}
 		}
 	}
 
@@ -36,7 +38,8 @@ class OrderEditor extends React.Component {
 		else if(actionType === 'remove') {
 			products.splice(rowIndex, 1);
 		}
-		this.setState({products}, () => {
+		const calculatedData = Utils.getDeductionsAndProfit(products, this.state.config)
+		this.setState({products, calculatedData}, () => {
 			const {id} = this.state;
 			DataFetcher.saveOrder(id, {products});
 			LocalStorage.set(this.periodWeek, this.state);
@@ -59,7 +62,10 @@ class OrderEditor extends React.Component {
 		DataFetcher.getOrder(this.props.match.params.orderId)
 			.then((order) => {
 				if(order) {
-					this.setState({...order});
+					this.setState({
+						...order,
+						calculatedData: Utils.getDeductionsAndProfit(order.products, order.config)
+					});
 				}
 				else {
 					this.setState({status: 'No se encontró la semana o período'})
@@ -86,12 +92,9 @@ class OrderEditor extends React.Component {
 			<CustomTable
 				rows={this.state.products}
 				onTableChange={this.handleTableChange}
-				min25Percent={this.state.config.min25Percent}
-				min30Percent={this.state.config.min30Percent}
-				anfCharges={this.state.config.anfCharges}
-				adminCharges={this.state.config.adminCharges}
+				calculatedData={this.state.calculatedData}
+				config={this.state.config}
 				showDetails={this.state.showDetails}
-				taxrate={this.state.config.taxrate}
 			/>
 			<FormGroup >
 				<FormControlLabel
