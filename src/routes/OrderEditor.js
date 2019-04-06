@@ -27,10 +27,10 @@ class OrderEditor extends React.Component {
 		const {productList} = this.state;
 		const products = this.state.products.slice();
 		if(actionType === 'add') {
-		  const product = productList.find((prod) => prod.name === rowData.name);
-		  product.qty = 1;
-		  product.isStock = false;
-		  products.push(product);
+			const product = productList.find((prod) => prod.name === rowData.name);
+			product.qty = 1;
+			product.isStock = false;
+			products.push(product);
 		}
 		else if(actionType === 'edit') {
 			Object.assign(products[rowIndex], rowData);
