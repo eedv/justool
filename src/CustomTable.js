@@ -75,7 +75,7 @@ function Details(props) {
 function SpanningTable(props) {
 	const { classes, rows, onTableChange, showDetails, config} = props;
 
-	const {totalPVP = 0, invoiceTotal = 0, profit = 0, stockPVP = 0, justDiscountPercent = 0, justDiscountAmmount = 0, invoiceTaxes = 0, investment = 0} = props.calculatedData;
+	const {totalPVP = 0, invoiceTotal = 0, profit = 0, stockPVP = 0, justDiscountPercent = 0, justDiscountAmmount = 0, invoiceTaxes = 0, investment = 0} = props.invoiceSummary;
 	return (
 		<Paper className={classes.root}>
 			<Table className={classes.table}>

@@ -19,7 +19,7 @@ class OrderEditor extends React.Component {
 			showDetails: false,
 			notes: '',
 			config: ConfigStore.get('AppConfig') || {}, // Default config,
-			calculatedData: {}
+			invoiceSummary: {}
 		}
 	}
 
@@ -38,10 +38,13 @@ class OrderEditor extends React.Component {
 		else if(actionType === 'remove') {
 			products.splice(rowIndex, 1);
 		}
-		const calculatedData = Utils.getDeductionsAndProfit(products, this.state.config)
-		this.setState({products, calculatedData}, () => {
+		const orderInvoiceData = {
+			products,
+			invoiceSummary: Utils.getDeductionsAndProfit(products, this.state.config)
+		};
+		this.setState(orderInvoiceData, () => {
 			const {id} = this.state;
-			DataFetcher.saveOrder(id, {products});
+			DataFetcher.saveOrder(id, orderInvoiceData);
 			LocalStorage.set(this.periodWeek, this.state);
 		});
 	}
@@ -62,10 +65,7 @@ class OrderEditor extends React.Component {
 		DataFetcher.getOrder(this.props.match.params.orderId)
 			.then((order) => {
 				if(order) {
-					this.setState({
-						...order,
-						calculatedData: Utils.getDeductionsAndProfit(order.products, order.config)
-					});
+					this.setState(order);
 				}
 				else {
 					this.setState({status: 'No se encontró la semana o período'})
@@ -92,7 +92,7 @@ class OrderEditor extends React.Component {
 			<CustomTable
 				rows={this.state.products}
 				onTableChange={this.handleTableChange}
-				calculatedData={this.state.calculatedData}
+				invoiceSummary={this.state.invoiceSummary}
 				config={this.state.config}
 				showDetails={this.state.showDetails}
 			/>
