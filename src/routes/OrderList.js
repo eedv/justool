@@ -45,7 +45,7 @@ class OrderList extends React.Component {
 	handleFilterSelection = (event) => {
 		this.setState({[`${event.target.name}FilterSelected`]: event.target.value}, () => {
 			DataFetcher.getOrders({year: this.state.yearFilterSelected, period: this.state.periodFilterSelected}).then((orders) => {
-				this.setState({orders});
+				this.setState({orders: orders.sort((a, b) => b.weekOfPeriod - a.weekOfPeriod)});
 			});
 		})
 
@@ -106,7 +106,7 @@ class OrderList extends React.Component {
 						{this.state.orders.map(order => (
 							<ListItem button component={Link} to={`${match.url}/${order.id}`} key={order.id} alignItems="flex-start">
 								<ListItemText
-									primary={`Perìodo ${order.period}, semana ${order.weekOfPeriod}`}
+									primary={`Perìodo ${order.period}, semana ${order.weekOfPeriod} - PVP: $ ${order.invoiceSummary.totalPVP}`}
 
 								/>
 							</ListItem>
