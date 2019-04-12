@@ -36,25 +36,31 @@ export default {
 	getDeductionsAndProfit(orderProducts, config) {
 		const {taxrate, anfCharges, adminCharges, min25Percent, min30Percent} = config;
 		const pvpSubtotals = this.calculatePvP(orderProducts);
-		const pvpTotal = this.getSum(pvpSubtotals, 'pvp');
-		const justDiscountPercent = pvpTotal >= min30Percent ? 30 : pvpTotal >= min25Percent ? 25 : 0;
+		const totalPVP = this.getSum(pvpSubtotals, 'pvp');
+		const justDiscountPercent = totalPVP >= min30Percent ? 30 : totalPVP >= min25Percent ? 25 : 0;
 
 		const paidPrice = this.calculatePaidPrice(pvpSubtotals, justDiscountPercent);
 
-		const justDiscountAmmount = (pvpTotal * justDiscountPercent) / 100;
+		const justDiscountAmmount = (totalPVP * justDiscountPercent) / 100;
 
-		//const stockPaidPrice = getSum(paidPrice.filter(row => row.isStock), 'paidPrice');
-		const stockPvP = this.getSum(pvpSubtotals.filter(row => row.isStock), 'pvp');
+		const investment = this.getSum(paidPrice.filter(row => row.isStock), 'paidPrice');
+		const stockPVP = this.getSum(pvpSubtotals.filter(row => row.isStock), 'pvp');
 		const invoiceSubtotal = this.getSum(paidPrice, 'paidPrice') + anfCharges + adminCharges;
 
 		const invoiceTaxes = taxrate * invoiceSubtotal / 100;
 
 		const invoiceTotal = invoiceSubtotal + invoiceTaxes;
 
+		const realPVP = totalPVP - stockPVP;
+		const profit = totalPVP - stockPVP - invoiceTotal;
+
 		return {
-			pvpTotal,
+			totalPVP,
+			realPVP,
 			invoiceTotal,
-			stockPvP,
+			investment,
+			profit,
+			stockPVP,
 			justDiscountPercent,
 			justDiscountAmmount,
 			invoiceTaxes

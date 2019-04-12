@@ -75,7 +75,7 @@ function Details(props) {
 function SpanningTable(props) {
 	const { classes, rows, onTableChange, showDetails, config} = props;
 
-	const {pvpTotal = 0, invoiceTotal = 0, stockPvP = 0, justDiscountPercent = 0, justDiscountAmmount = 0, invoiceTaxes = 0} = props.calculatedData;
+	const {totalPVP = 0, invoiceTotal = 0, profit = 0, stockPVP = 0, justDiscountPercent = 0, justDiscountAmmount = 0, invoiceTaxes = 0, investment = 0} = props.calculatedData;
 	return (
 		<Paper className={classes.root}>
 			<Table className={classes.table}>
@@ -121,9 +121,9 @@ function SpanningTable(props) {
 					))}
 					<TableRow>
 						<CustomTableCell colSpan={3}/>
-						<CustomTableCell>Total PvP</CustomTableCell>
+						<CustomTableCell>Total PvP (Productos de stock incluidos)</CustomTableCell>
 						<CustomTableCell/>
-						<CustomTableCell align="left">{ccyFormat(pvpTotal)}</CustomTableCell>
+						<CustomTableCell align="left">{ccyFormat(totalPVP)}</CustomTableCell>
 					</TableRow>
 					{showDetails ? <Details
 						justDiscountPercent={justDiscountPercent}
@@ -131,19 +131,18 @@ function SpanningTable(props) {
 						invoiceTaxes={invoiceTaxes}
 						{...config}
 						></Details> : null}
-
 					<TableRow>
-						<CustomTableCell rowSpan={3} colSpan={3}>Resumen</CustomTableCell>
-						<CustomTableCell colSpan={2}>Total a pagar</CustomTableCell>
+						<CustomTableCell rowSpan={4} colSpan={3}>Resumen</CustomTableCell>
+						<CustomTableCell colSpan={2}>Total a pagar (Factura)</CustomTableCell>
 						<CustomTableCell align="left">{ccyFormat(invoiceTotal)}</CustomTableCell>
 					</TableRow>
 					<TableRow>
-						<CustomTableCell colSpan={2}>Total a cobrar</CustomTableCell>
-						<CustomTableCell align="left">{ccyFormat(pvpTotal - stockPvP)}</CustomTableCell>
+						<CustomTableCell colSpan={2}>Ganancia potencial</CustomTableCell>
+						<CustomTableCell align="left">{ccyFormat(profit)}</CustomTableCell>
 					</TableRow>
 					<TableRow>
-						<CustomTableCell colSpan={2}>Ganancia potencial</CustomTableCell>
-						<CustomTableCell align="left">{ccyFormat(pvpTotal - stockPvP - invoiceTotal)}</CustomTableCell>
+						<CustomTableCell colSpan={2}>Inversion en stock</CustomTableCell>
+						<CustomTableCell align="left">{ccyFormat(investment)}</CustomTableCell>
 					</TableRow>
 				</TableBody>
 			</Table>
