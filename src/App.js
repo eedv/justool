@@ -70,14 +70,6 @@ class App extends React.Component {
 		this.setState(state => ({ mobileOpen: !state.mobileOpen }));
 	};
 
-	componentDidMount() {
-		fetch(`https://justoolapi.herokuapp.com/products`).then((res) => {
-			return res.json()
-		}).then((period) => {
-			this.setState({period});
-		})
-	}
-
 	render() {
 		const { classes, theme, title} = this.props;
 
@@ -136,7 +128,7 @@ class App extends React.Component {
 					<Router>
 						<div>
 							<Route path="/pedidos/:orderId" exact component={OrderEditor}/>
-							<Route path="/" exact render={() => <ProductList productList={this.state.period.products}></ProductList>}/>
+							<Route path="/" exact render={() => <ProductList></ProductList>}/>
 							<Route path="/config" exact component={ConfigEditor}/>
 							<Route path="/pedidos" exact component={OrderList}/>
 						</div>

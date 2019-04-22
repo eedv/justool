@@ -13,6 +13,8 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 
+import DataFetcher from '../DataFetcher';
+
 const styles = theme => ({
 	root: {
 		display: 'flex',
@@ -37,26 +39,37 @@ class ProductList extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			products: []
+			filteredProducts: []
+		}
+	}
+	products = [];
+	filterProducts(filterTerm) {
+		if(filterTerm.length >= 3) {
+			let filteredProducts = this.products.filter((p) => p.name.toLowerCase().indexOf(filterTerm.toLowerCase()) !== -1);
+			this.setState({filteredProducts});
+		}
+		else {
+			this.setState({filteredProducts: this.products})
 		}
 	}
 
-	filterProducts(filterTerm, productList) {
-		if(filterTerm.length >= 3) {
-			let products = productList.filter((p) => p.name.toLowerCase().indexOf(filterTerm.toLowerCase()) !== -1);
-			this.setState({products});
-		}
+	componentWillMount() {
+		DataFetcher.getProductList()
+			.then((products) => {
+				this.products = products
+				this.setState({filteredProducts: products});
+			});
 	}
 
 	render() {
-		const { classes, productList} = this.props;
+		const { classes} = this.props;
 		return (
 			<div className={classes.root}>
-				<TextField fullWidth label="Filtrar" onChange={(e) => this.filterProducts(e.target.value, productList)}></TextField>
+				<TextField fullWidth label="Filtrar" onChange={(e) => this.filterProducts(e.target.value)}></TextField>
 				<Paper className={classes.gridList}>
 				<List className={classes.root}>
 
-					{this.state.products.map(product => (
+					{this.state.filteredProducts.map(product => (
 						<ListItem key={product.code} alignItems="flex-start">
 							<ListItemAvatar>
 								<Avatar alt="Remy Sharp" src={product.image} className={classes.bigImg} />

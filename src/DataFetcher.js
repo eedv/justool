@@ -54,7 +54,7 @@ export default {
 		.then(response => response.json());
 	},
 
-	async getProductList(priceListId) {
+	async getProductList(priceListId = '') {
 		let response = await fetch(`${baseApi}/products/${priceListId}`);
 		let productList = await response.json();
 		return productList ? productList.products : null;

@@ -32,9 +32,9 @@ class OrderList extends React.Component {
 		}
 	}
 
-	componentDidMount() {
+	componentWillMount() {
 		DataFetcher.getOrders({}).then((orders) => {
-		  this.setState({
+		  	this.setState({
 				yearFilters: uniq(orders.map((period) => period.year)),
 				periodFilters: uniq(orders.map((period) => period.period)),
 				orders: orders.sort((a, b) => b.week - a.week)
