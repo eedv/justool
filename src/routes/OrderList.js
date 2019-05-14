@@ -64,8 +64,8 @@ class OrderList extends React.Component {
 	render() {
 		const {classes, match} = this.props;
 		if(this.state.orderCreated.year) {
-			const {year, period, week} = this.state.orderCreated;
-			return <Redirect to={`/pedidos/${year}/${period}/${week}`}></Redirect>
+			const {id} = this.state.orderCreated;
+			return <Redirect to={`/pedidos/${id}`}></Redirect>
 		}
 		else {
 			return (
@@ -106,7 +106,7 @@ class OrderList extends React.Component {
 						{this.state.orders.map(order => (
 							<ListItem button component={Link} to={`${match.url}/${order.id}`} key={order.id} alignItems="flex-start">
 								<ListItemText
-									primary={`Perìodo ${order.period}, semana ${order.weekOfPeriod} - PVP: $ ${order.invoiceSummary.totalPVP}`}
+									primary={`Perìodo ${order.period}, semana ${order.weekOfPeriod} - PVP: $ ${order.invoiceSummary.totalPVP || 0}`}
 
 								/>
 							</ListItem>
